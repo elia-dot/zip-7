@@ -120,6 +120,12 @@ export const login = async (req, res) => {
       message: 'Incorrect password',
     });
   }
+  if(user.blocked){
+    return res.status(403).json({
+      success: false,
+      message: 'Your account has been blocked.',
+    })
+  }
   const token = await generateAuthToken(user);
   res.cookie('jwt', token, {
     httpOnly: true,
