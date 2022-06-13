@@ -8,6 +8,7 @@ import authRouter from './routers/authRouter.js';
 import userRouter from './routers/userRouter.js';
 import companyRouter from './routers/companyRouter.js';
 import reviewRouter from './routers/reviewRouter.js';
+import reportRouter from './routers/reportRouter.js';
 
 dotenv.config();
 
@@ -23,6 +24,7 @@ app.use('/api/auth', authRouter);
 app.use('/api/users', userRouter);
 app.use('/api/companies', companyRouter);
 app.use('/api/reviews', reviewRouter);
+app.use('/api/reports', reportRouter);
 
 const port = process.env.PORT || 5000;
 

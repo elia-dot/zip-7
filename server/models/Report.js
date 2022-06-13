@@ -1,12 +1,12 @@
 import mongoose from 'mongoose';
 
 const ReportSchema = new mongoose.Schema({
-  reviewType: {
+  review: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Review',
     required: true,
   },
-  user: {
+  contact: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true,
@@ -51,6 +51,32 @@ const ReportSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  machineDescription  : {
+    type: String,
+    required: true,
+  },
+  machineLicenseNumber: {
+    type: String,
+    required: true,
+  },
+  machine : {
+    serialNumber: {
+      type: String,
+      required: true,
+    },
+    model : {
+      type: String,
+      required: true,
+    },
+    year : {
+      type: String,
+      required: true,
+    },
+    manufacturer : {
+      type: String,
+      required: true,
+    },
+  }
 });
 
 export default mongoose.model('Report', ReportSchema);

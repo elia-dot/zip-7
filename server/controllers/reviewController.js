@@ -2,10 +2,11 @@ import Review from '../models/Review.js';
 
 export const addReview = async (req, res) => {
   try {
-    const { type, saftyOrdinance } = req.body;
+    const { type, saftyOrdinance, tableColumns } = req.body;
     const newReviewType = new Review({
       type,
       saftyOrdinance,
+      tableColumns
     });
     await newReviewType.save();
     res.status(200).json({
