@@ -25,11 +25,9 @@ const CompanySchema = new mongoose.Schema({
     },
     email: {
         type: String,
-        required: true,
     },
     fax : {
         type: String,
-        required: true,
     },
     zipCode: {
         type: String,

@@ -47,6 +47,7 @@ export const signup = async (req, res) => {
   });
   res.status(201).json({
     sucssess: true,
+    token,
     user,
   });
 };
@@ -133,9 +134,24 @@ export const login = async (req, res) => {
   user.password = undefined;
   res.status(200).json({
     success: true,
+    token,
     user,
   });
 };
+
+export const getAuthUser = async (req, res) => {
+  const user = await User.findById(req.user._id).select('-password');
+  if (!user) {
+    return res.status(404).json({
+      success: false,
+      message: 'User not found',
+    });
+  }
+  res.status(200).json({
+    success: true,
+    user,
+  });
+}
 
 export const validateEmail = async (req, res) => {
   const id = req.user._id;

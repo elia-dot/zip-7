@@ -1,0 +1,8 @@
+export const LOGIN = 'LOGIN'
+export const LOGIN_ERROR= 'LOGIN_ERROR'
+export const START_AUTH_LOADING= 'START_AUTH_LOADING'
+export const STOP_AUTH_LOADING= 'STOP_AUTH_LOADING'
+export const SIGNUP= 'SIGNUP'
+export const SIGNUP_ERROR= 'SIGNUP_ERROR'
+export const LOAD_USER= 'LOAD_USER'
+export const LOAD_USER_FAILED= 'LOAD_USER_FAILED'

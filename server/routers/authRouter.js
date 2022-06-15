@@ -8,6 +8,7 @@ import {
   validateEmail,
   validatePasswordToken,
   updatePassword,
+  getAuthUser,
 } from '../controllers/authController.js';
 
 const router = express.Router();
@@ -19,5 +20,6 @@ router.post('/forgot-password', forgotPassword);
 router.post('/validate-token', validatePasswordToken);
 router.patch('/create-password', createPassword);
 router.patch('/update-password', protect, updatePassword);
+router.get('/auth-user', protect, getAuthUser);
 
 export default router;

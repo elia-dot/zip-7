@@ -15,10 +15,18 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors());
+app.use(cors({ origin: true, credentials: true }));
 app.options('*', cors());
+app.use(function (req, res, next) {
+  res.header('Access-Control-Allow-Credentials', true);
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept'
+  );
+  next();
+});
 
-connectDB()
+connectDB();
 
 app.use('/api/auth', authRouter);
 app.use('/api/users', userRouter);
