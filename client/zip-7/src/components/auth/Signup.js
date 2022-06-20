@@ -1,5 +1,5 @@
 import { Grid, Box, Text, Button, Flex, Spacer } from '@chakra-ui/react';
-import React, { useState, useEffect } from 'react';
+import React, { useLayoutEffect, useState, useEffect } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -51,8 +51,8 @@ const Signup = () => {
     const data = { ...contact, companyDetails: company };
     dispatch(signup(data));
   };
-  useEffect(() => {
-    isAuth && history.push('/');
+  useLayoutEffect(() => {
+    isAuth && history.push('/dashboard/reports');
   }, [isAuth, history]);
 
   useEffect(() => {
@@ -80,7 +80,7 @@ const Signup = () => {
       >
         <Box
           position="absolute"
-          bg="blue.800"
+          bg="blue.600"
           px="20px"
           py="15px"
           top="-30px"
@@ -112,7 +112,7 @@ const Signup = () => {
         <Spacer />
         {step === 1 && (
           <Button
-            bg="blue.800"
+            bg="blue.600"
             textColor="#fff"
             w="100%"
             onClick={() => setStep(2)}
@@ -131,9 +131,9 @@ const Signup = () => {
         {step === 2 && (
           <Flex gap="10px">
             <Button
-              borderColor="blue.800"
+              borderColor="blue.600"
               borderWidth="1px"
-              textColor="blue.800"
+              textColor="blue.600"
               w="100%"
               mt="16px"
               onClick={() => setStep(1)}
@@ -141,7 +141,7 @@ const Signup = () => {
               <Text>הקודם</Text>
             </Button>
             <Button
-              bg="blue.800"
+              bg="blue.600"
               textColor="#fff"
               w="100%"
               mt="16px"

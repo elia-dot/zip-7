@@ -15,6 +15,7 @@ const saveToken = token => {
 };
 
 export const loadUser = () => async dispatch => {
+  dispatch({ type: START_AUTH_LOADING });
   const token = localStorage.getItem('token');
   if (!token) {
     dispatch({
@@ -27,13 +28,14 @@ export const loadUser = () => async dispatch => {
     const res = await axios.get(`${process.env.REACT_APP_API}/auth/auth-user`, {
       withCredentials: true,
     });
-    console.log(res.data);
+    dispatch({type: STOP_AUTH_LOADING})
     dispatch({
       type: LOAD_USER,
       payload: res.data.user,
     });
   } catch (error) {
     console.log(error);
+    dispatch({type: STOP_AUTH_LOADING})
     dispatch({
       type: LOAD_USER_FAILED,
       payload: null,

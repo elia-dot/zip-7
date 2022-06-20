@@ -23,11 +23,6 @@ export const signup = async (req, res) => {
       .status(400)
       .json({ sucssess: false, message: 'User already exists' });
   }
-  let company = await Company.findOne({ BN: companyDetails.BN });
-  if (!company) {
-    company = new Company(companyDetails);
-    await company.save();
-  }
 
   const hashedPassword = await bcrypt.hash(password, 10);
   const verificationToken = uuidv4();
@@ -38,9 +33,16 @@ export const signup = async (req, res) => {
     email,
     verificationToken,
     password: hashedPassword,
-    company: company._id,
   });
   const token = await generateAuthToken(newUser);
+  await newUser.save();
+  let company = await Company.findOne({ BN: companyDetails.BN });
+  if (!company) {
+    company = await Company.create(companyDetails);
+  }
+  newUser.company = company._id;
+  company.contacts.push(newUser._id);
+  await company.save();
   await newUser.save();
   res.cookie('jwt', token, {
     httpOnly: true,
@@ -48,7 +50,7 @@ export const signup = async (req, res) => {
   res.status(201).json({
     sucssess: true,
     token,
-    user,
+    user: newUser,
   });
 };
 

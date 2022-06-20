@@ -10,7 +10,7 @@ import {
   AlertDescription,
   Spinner,
 } from '@chakra-ui/react';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -23,10 +23,11 @@ const Login = () => {
   const [errorMsg, setErrorMsg] = useState('');
   const dispatch = useDispatch();
   const history = useHistory();
+
   const { isAuth, loading, error } = useSelector(state => state.auth);
 
-  useEffect(() => {
-    isAuth && history.push('/');
+  useLayoutEffect(() => {
+    isAuth && history.push('/dashboard/reports');
   }, [isAuth, history]);
 
   useEffect(() => {
@@ -53,7 +54,7 @@ const Login = () => {
       >
         <Box
           position="absolute"
-          bg="blue.800"
+          bg="blue.600"
           px="20px"
           py="15px"
           top="-30px"
@@ -93,7 +94,7 @@ const Login = () => {
             </Alert>
           )}
           <Button
-            bg="blue.800"
+            bg="blue.600"
             textColor="white"
             onClick={() => dispatch(login({ email, password }))}
             disabled={email === '' || password === '' || loading}

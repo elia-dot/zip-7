@@ -17,7 +17,7 @@ const UserSchema = new mongoose.Schema(
     password: {
       type: String,
       minlength: 6,
-      select : false,
+      select: false,
     },
     role: {
       type: String,
@@ -56,7 +56,7 @@ const UserSchema = new mongoose.Schema(
       type: Date,
       default: null,
       select: false,
-    }
+    },
   },
   { timestamps: true }
 );

@@ -33,6 +33,10 @@ const CompanySchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    primaryContact: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+    },
     contacts : [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',

@@ -1,7 +1,13 @@
 import React, { useEffect } from 'react';
-import { ChakraProvider, theme } from '@chakra-ui/react';
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { ChakraProvider, Grid, Spinner, theme } from '@chakra-ui/react';
+import {
+  BrowserRouter as Router,
+  Redirect,
+  Route,
+  Switch,
+} from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import './app.css';
 
 import Login from './components/auth/Login';
 import { RTLProvider } from './components/RTLProvider';
@@ -12,17 +18,35 @@ import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
   const dispatch = useDispatch();
+  const { loading } = useSelector(state => state.auth);
   useEffect(() => {
-    console.log(1111);
     dispatch(loadUser());
-  },[dispatch])
+  }, [dispatch]);
+
+  if (loading) {
+    return (
+      <Grid w="100%" h="100vh" placeItems="center">
+        <Spinner
+          width="30px"
+          height="30px"
+          color="blue.600"
+          size="xl"
+          thickness="4px"
+          speed="0.65s"
+        />
+      </Grid>
+    );
+  }
+
   return (
     <ChakraProvider theme={theme}>
       <RTLProvider>
         <Router>
           <Switch>
-            {/* <Route exact path="/" component={Dashboard} /> */}
-            <ProtectedRoute exact path="/" component={Dashboard}/>
+            <ProtectedRoute path="/dashboard" component={Dashboard} />
+            <Route exact path="/">
+              <Redirect to="/dashboard/reports" />
+            </Route>
             <Route path="/login" component={Login} />
             <Route path="/signup" component={Signup} />
           </Switch>
