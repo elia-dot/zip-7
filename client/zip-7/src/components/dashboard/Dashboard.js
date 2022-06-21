@@ -11,6 +11,7 @@ import Notifications from './notifications/Notifications';
 import Logs from './logs/Logs';
 import { useRoute } from '../../hooks/useRoute';
 import CompaniesControls from './companies/CompaniesControls';
+import ReportsControls from './reports/ReportsControls';
 
 const Dashboard = () => {
   const [show, setShow] = React.useState(false);
@@ -28,6 +29,7 @@ const Dashboard = () => {
         <Flex height="90px">
           <Box flex={1} height="100%">
           {route=== 'clients' && <CompaniesControls/>}
+          {route=== 'reports' && <ReportsControls/>}
           </Box>
           <Show below="md">
             <Flex p="15px">

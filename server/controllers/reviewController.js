@@ -11,7 +11,7 @@ export const addReview = async (req, res) => {
     await newReviewType.save();
     res.status(200).json({
       success: true,
-      message: 'Review type added successfully',
+      review: newReviewType,
     });
   } catch (error) {
     console.log(error);

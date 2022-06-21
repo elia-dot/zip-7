@@ -69,6 +69,7 @@ export const createCompany = async (req, res) => {
       BN,
     });
     newCompany.contacts.push(contactId);
+    newCompany.primaryContact = contactId;
     contact.company = newCompany._id;
     await contact.save();
     await newCompany.save();
@@ -84,7 +85,7 @@ export const createCompany = async (req, res) => {
 export const updateCompany = async (req, res) => {
   try {
     const companyId = req.params.id;
-    const company = await Company.findById(companyId);
+    let company = await Company.findById(companyId);
     if (!company) {
       return res.status(400).json({
         success: false,
@@ -110,6 +111,10 @@ export const updateCompany = async (req, res) => {
     if (phone !== undefined) company.phone = phone;
 
     await company.save();
+
+    company = await Company.findById(companyId).populate(
+      'contacts primaryContact'
+    );
     res.status(200).json({
       success: true,
       company,

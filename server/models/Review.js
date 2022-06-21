@@ -11,7 +11,7 @@ const ReviewSchema = new mongoose.Schema({
   },
   tableColumns: [
     {
-      type: String,
+      type: Object,
       required: true,
     },
   ],
