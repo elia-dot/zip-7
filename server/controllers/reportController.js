@@ -1,13 +1,14 @@
 import Report from '../models/Report.js';
 import Company from '../models/Company.js';
 import User from '../models/User.js';
+import Machine from '../models/Machine.js';
 
 export const addReport = async (req, res) => {
   try {
     const {
       review,
       location,
-      contact,
+      company,
       notes,
       actions,
       conclusions,
@@ -17,29 +18,19 @@ export const addReport = async (req, res) => {
       machineLicenseNumber,
       machine,
     } = req.body;
-    let reportContact = await User.findOne({ email: contact.email });
-    let reportCompany;
 
-    if (!reportContact) {
-      reportCompany = await Company.findOne({ BN: contact.companyDetails.BN });
-      if (!reportCompany) {
-        reportCompany = await Company.create(contact.company);
-      }
-      reportContact = await User.create({
-        firstName: contact.firstName,
-        lastName: contact.lastName,
-        phone: contact.phone,
-        email: contact.email,
-        role: 'contact',
-        company: reportCompany._id,
-      });
+    let machineId;
+    const newMachine = await Machine.findOne(req.body.machine);
+    console.log(newMachine);
+    if (!newMachine) {
+      const mach = await Machine.create(machine);
+      machineId = mach._id;
     } else {
-      reportCompany = await Company.findById(reportContact.company);
+      machineId = newMachine._id;
     }
 
     const report = await Report.create({
-      company: reportCompany._id,
-      contact: reportContact._id,
+      company,
       notes,
       location,
       actions,
@@ -49,8 +40,9 @@ export const addReport = async (req, res) => {
       machineDescription,
       machineLicenseNumber,
       review,
-      machine,
+      machine: machineId,
     });
+
     return res.status(200).json({
       success: true,
       report,
@@ -245,6 +237,22 @@ export const getReportsByCompany = async (req, res) => {
     });
   }
 };
+
+export const getMachines = async (req,res) => {
+  try {
+    const machines = await Machine.find();
+    return res.status(200).json({
+      success: true,
+      machines,
+    })
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: error
+    })
+  }
+}
 
 export const searchReportByMachine = async (req, res) => {
   try {

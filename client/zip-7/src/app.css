@@ -1,21 +1,38 @@
-/* width */
+/*scrollbar */
 .scrollbar::-webkit-scrollbar {
     width: 6px;
   }
-  
-  /* Track */
+
   .scrollbar::-webkit-scrollbar-track {
     background: transparent; 
   }
    
-  /* Handle */
+
   .scrollbar::-webkit-scrollbar-thumb {
     background: #2B6CB0; 
     border-radius: 5px;
     width: 50px;
   }
   
-  /* Handle on hover */
   .scrollbar::-webkit-scrollbar-thumb:hover {
     background: #555; 
+   
+  }
+  
+/*date picker */
+  .date-picker {
+    outline:  2px solid transparent;
+    outline-offset: 2px;
+    border: 1px solid rgba(66, 153, 225, 0.2);
+    width: 100%;
+    padding: 7px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .clear-date {
+    transform: translateX(-185px);
+    display: grid;
+    place-content: center;
+    cursor: pointer;
   }

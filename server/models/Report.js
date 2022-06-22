@@ -6,11 +6,6 @@ const ReportSchema = new mongoose.Schema({
     ref: 'Review',
     required: true,
   },
-  contact: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true,
-  },
   company: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Company',
@@ -51,7 +46,7 @@ const ReportSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  machineDescription  : {
+  machineDescription: {
     type: String,
     required: true,
   },
@@ -59,24 +54,11 @@ const ReportSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  machine : {
-    serialNumber: {
-      type: String,
-      required: true,
-    },
-    model : {
-      type: String,
-      required: true,
-    },
-    year : {
-      type: String,
-      required: true,
-    },
-    manufacturer : {
-      type: String,
-      required: true,
-    },
-  }
+  machine: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Machine',
+    required: true,
+  },
 });
 
 export default mongoose.model('Report', ReportSchema);
