@@ -1,6 +1,7 @@
 import axios from 'axios';
 
 import {
+  ADD_REPORT_TYPE,
   GET_MACHINES,
   GET_REPORTS,
   GET_REPORTS_TYPES,
@@ -29,6 +30,20 @@ export const getReportsTypes = () => async dispatch => {
       withCredentials: true,
     });
     dispatch({ type: GET_REPORTS_TYPES, payload: res.data.reviews });
+    dispatch({ type: STOP_REPORTS_LOADING });
+  } catch (err) {
+    console.log(err);
+    dispatch({ type: STOP_REPORTS_LOADING });
+  }
+}
+
+export const addReportType = (data) => async dispatch => {
+  dispatch({ type: START_REPORTS_LOADING });
+  try {
+    const res = await axios.post(`${process.env.REACT_APP_API}/reviews`, data, {
+      withCredentials: true,
+    });
+    dispatch({ type: ADD_REPORT_TYPE, payload: res.data.review });
     dispatch({ type: STOP_REPORTS_LOADING });
   } catch (err) {
     console.log(err);

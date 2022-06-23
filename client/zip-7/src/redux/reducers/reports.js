@@ -4,6 +4,7 @@ import {
   STOP_REPORTS_LOADING,
   GET_REPORTS_TYPES,
   GET_MACHINES,
+  ADD_REPORT_TYPE,
 } from '../actions/types';
 
 const initialState = {
@@ -27,6 +28,12 @@ export default function (state = initialState, action) {
       return {
         ...state,
         reportTypes: payload,
+        loading: false,
+      };
+    case ADD_REPORT_TYPE:
+      return {
+        ...state,
+        reportTypes: [...state.reportTypes, payload],
         loading: false,
       };
     case GET_MACHINES: 
