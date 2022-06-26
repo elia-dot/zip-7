@@ -1,13 +1,5 @@
 import React, { useEffect } from 'react';
-import {
-  Box,
-  Text,
-  Show,
-  Flex,
-  Accordion,
-  Grid,
-  Spinner,
-} from '@chakra-ui/react';
+import { Box, Text, Show, Flex, Accordion, Grid, Spinner } from '@chakra-ui/react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   getReports,
@@ -15,6 +7,7 @@ import {
   getMachines,
 } from '../../../redux/actions/reports';
 import { getCompanies } from '../../../redux/actions/companies';
+import Report from './Report';
 
 const Reports = () => {
   const dispatch = useDispatch();
@@ -32,6 +25,20 @@ const Reports = () => {
     dispatch(getMachines());
   }, [dispatch]);
 
+  if (loading && reports.length === 0)
+    return (
+      <Grid placeContent="center" height="80vh">
+        <Spinner
+          width="30px"
+          height="30px"
+          color="blue.600"
+          size="xl"
+          thickness="4px"
+          speed="0.65s"
+        />
+        <Text>טוען מידע...</Text>
+      </Grid>
+    );
   return (
     <Flex direction="column">
       <Flex padding="16px" borderBottom="1px solid gray">
@@ -39,7 +46,7 @@ const Reports = () => {
           <Text textAlign="center"> חברה:</Text>
         </Box>
         <Box flex={3} borderRight="1px solid lightgray">
-          <Text textAlign="center">כלי:</Text>
+          <Text textAlign="center">סוג תסקיר:</Text>
         </Box>
         <Box flex={3} borderRight="1px solid lightgray">
           <Text textAlign="center"> תאריך ביצוע הסקירה:</Text>
@@ -54,7 +61,11 @@ const Reports = () => {
         }
         <Box flex={1}></Box>
       </Flex>
-      <Accordion allowToggle></Accordion>
+      <Accordion allowToggle>
+        {reports.map(report => (
+          <Report key={report._id} report={report} />
+        ))}
+      </Accordion>
     </Flex>
   );
 };

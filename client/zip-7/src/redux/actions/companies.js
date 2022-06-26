@@ -83,7 +83,7 @@ export const addCompany = data => async dispatch => {
     dispatch({ type: STOP_COMPANY_LOADING });
     dispatch({
       type: ADD_COMPANY,
-      payload: { company: res.data.company },
+      payload: res.data.company,
     });
   } catch (error) {
     console.log(error);

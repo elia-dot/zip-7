@@ -14,19 +14,24 @@ export const addReport = async (req, res) => {
       conclusions,
       reportNumber,
       reportType,
+      machineType,
       machineDescription,
       machineLicenseNumber,
       machine,
+      columns,
     } = req.body;
 
     let machineId;
-    const newMachine = await Machine.findOne(req.body.machine);
-    console.log(newMachine);
-    if (!newMachine) {
-      const mach = await Machine.create(machine);
-      machineId = mach._id;
+    if (machineType === 'מכונה') {
+      const newMachine = await Machine.findOne(req.body.machine);
+      if (!newMachine) {
+        const mach = await Machine.create(machine);
+        machineId = mach._id;
+      } else {
+        machineId = newMachine._id;
+      }
     } else {
-      machineId = newMachine._id;
+      machineId = machine;
     }
 
     const report = await Report.create({
@@ -41,6 +46,8 @@ export const addReport = async (req, res) => {
       machineLicenseNumber,
       review,
       machine: machineId,
+      columns,
+      reviewer: req.user._id,
     });
 
     return res.status(200).json({
@@ -62,10 +69,17 @@ export const getReports = async (req, res) => {
     const id = req.user._id;
     const user = await User.findById(id);
     if (user.role === 'master') {
-      reports = await Report.find();
+      reports = await Report.find().populate({
+        path: 'company',
+        populate: { path: 'primaryContact' },
+      }).populate('review reviewer');
     } else {
-      reports = await Report.find({ contact: user._id });
+      reports = await Report.find({ contact: user._id }).populate({
+        path: 'company',
+        populate: { path: 'primaryContact' },
+      }).populate('review reviewer');
     }
+
     return res.status(200).json({
       success: true,
       reports,
@@ -238,21 +252,21 @@ export const getReportsByCompany = async (req, res) => {
   }
 };
 
-export const getMachines = async (req,res) => {
+export const getMachines = async (req, res) => {
   try {
     const machines = await Machine.find();
     return res.status(200).json({
       success: true,
       machines,
-    })
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).json({
       success: false,
-      message: error
-    })
+      message: error,
+    });
   }
-}
+};
 
 export const searchReportByMachine = async (req, res) => {
   try {

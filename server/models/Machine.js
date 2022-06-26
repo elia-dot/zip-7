@@ -1,6 +1,11 @@
 import mongoose from 'mongoose';
 
 const machineSchema = mongoose.Schema({
+  type : {
+    type: String,
+    required: true,
+    enum : ['מכונה', 'אביזר הרמה'],
+  },
   serialNumber: {
     type: String,
     required: true,

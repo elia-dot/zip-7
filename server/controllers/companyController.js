@@ -58,7 +58,7 @@ export const createCompany = async (req, res) => {
     }
     const contactId = contact._id;
     const { name, address, city, phone, email, fax, zipCode } = req.body;
-    const newCompany = await Company.create({
+    let newCompany = await Company.create({
       name,
       address,
       city,
@@ -73,6 +73,9 @@ export const createCompany = async (req, res) => {
     contact.company = newCompany._id;
     await contact.save();
     await newCompany.save();
+    newCompany = await Company.findById(newCompany._id).populate(
+      'contacts primaryContact'
+    );
     res.status(201).json({
       success: true,
       company: newCompany,

@@ -55,10 +55,20 @@ const ReportSchema = new mongoose.Schema({
     required: true,
   },
   machine: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: mongoose.Schema.Types.Mixed,
     ref: 'Machine',
+  },
+  reviewer : {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
     required: true,
   },
+  columns: [
+    {
+      type: Object,
+      required: true,
+    },
+  ],
 });
 
 export default mongoose.model('Report', ReportSchema);
