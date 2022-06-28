@@ -13,7 +13,7 @@ import {
   InputRightElement,
   Text,
   Button,
-  Icon
+  Icon,
 } from '@chakra-ui/react';
 import { IoMdAdd, IoMdClose } from 'react-icons/io';
 import { BsTrash } from 'react-icons/bs';
@@ -26,6 +26,7 @@ const ReportStepTwo = ({
   removeInput,
   addInput,
 }) => {
+  
   const changeReportColumn = (e, i, primaryIndex) => {
     const { target } = e;
     const newColumns = [...report.columns];
@@ -61,7 +62,7 @@ const ReportStepTwo = ({
     <>
       <Accordion allowToggle allowMultiple>
         {report.columns.map((_, primaryIndex) => (
-          <AccordionItem key={primaryIndex * 100}>
+          <AccordionItem key={(primaryIndex +1) * 100}>
             <AccordionButton bg="gray.50">
               {report.columns.length > 1 && (
                 <Icon
@@ -81,7 +82,7 @@ const ReportStepTwo = ({
                     placeholder={column}
                     mb="12px"
                     value={report.columns[primaryIndex][i]}
-                    key={i}
+                    key={(i + 1) * 23}
                     onChange={e => {
                       changeReportColumn(e, i, primaryIndex);
                     }}
@@ -92,7 +93,7 @@ const ReportStepTwo = ({
                     {column.columns.map((c, index) => (
                       <Input
                         placeholder={c[index]}
-                        key={index * 10}
+                        key={(index + 1) * 10}
                         mb="12px"
                         value={
                           report.columns[primaryIndex][i][index][`${index}`]

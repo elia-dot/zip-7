@@ -93,7 +93,7 @@ const Company = ({ company }) => {
               <ContactTab contacts={company?.contacts} company={company} />
             </TabPanel>
             <TabPanel>
-              <CompanyReportsTab reports={company?.reports} />
+              <CompanyReportsTab company={company} />
             </TabPanel>
           </TabPanels>
         </Tabs>

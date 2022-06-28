@@ -60,31 +60,8 @@ const ReportForm = ({ isOpen, onClose, modalType, oldReport }) => {
           : column.columns.map((c, i) => ({ [i]: '' }))
       );
       setReport({ ...report, columns: [reportColumns] });
-    } else if (oldReport && report.review !== '') {
-      const cuurent = reportTypes.filter(
-        type => type._id === report.review._id
-      )[0];
-      const reportColumns = cuurent.tableColumns.map(column =>
-        typeof column === 'string'
-          ? ''
-          : column.columns.map((c, i) => ({ [i]: '' }))
-      );
-      setReport({ ...report, columns: [reportColumns] });
     }
   }, [report.review]);
-
-  console.log(report);
-  // useEffect(() => {
-  //   if (isTypeChanged) {
-  //     const reportColumns = currentReportType?.tableColumns.map(column =>
-  //       typeof column === 'string'
-  //         ? ''
-  //         : column.columns.map((c, i) => ({ [i]: '' }))
-  //     );
-  //     setReport({ ...report, columns: [reportColumns] });
-  //     setIsTypeChanged(false);
-  //   }
-  // }, [isTypeChanged, currentReportType]);
 
   useEffect(() => {
     if (oldReport) {
@@ -95,6 +72,33 @@ const ReportForm = ({ isOpen, onClose, modalType, oldReport }) => {
     }
   }, []);
 
+  useEffect(() => {
+    if (oldReport && isTypeChanged) {
+      console.log(currentReportType?.tableColumns);
+      const reportColumns = currentReportType?.tableColumns.map(column =>
+        typeof column === 'string'
+          ? ''
+          : column.columns.map((c, i) => ({ [i]: '' }))
+      );
+
+      setReport(prev => ({ ...prev, columns: [reportColumns] }));
+      console.log(report.columns);
+
+      if (currentReportType?.machineType === 'מכונה') {
+        setReport({
+          ...report,
+          machine: { model: '', year: '', manufacturer: '', serialNumber: '' },
+        });
+      } else {
+        setReport(prev => ({
+          ...prev,
+          machine: '',
+        }));
+      }
+    }
+  }, [isTypeChanged, currentReportType]);
+
+  console.log(report.columns);
   const closeCompanyForm = () => {
     setShowCompanyForm(false);
   };
@@ -194,6 +198,7 @@ const ReportForm = ({ isOpen, onClose, modalType, oldReport }) => {
               setShowCompanyForm={setShowCompanyForm}
               setCurrentReportType={setCurrentReportType}
               setIsTypeChanged={setIsTypeChanged}
+              oldReport={oldReport}
             />
           )}
           {step === 2 && (

@@ -30,6 +30,7 @@ const ReportStepOne = ({
   addInput,
   setShowMachinesTable,
   setShowCompanyForm,
+  oldReport,
 }) => {
   const [showTypeForm, setShowTypeForm] = useState(false);
   const [currentCompany, setCurrentCompany] = useState(null);
@@ -66,32 +67,27 @@ const ReportStepOne = ({
     }
   }, [report.company]);
 
-  const clearOldData = () => {
-    // const cuurent = reportTypes.filter(type => type._id === report.review)[0];
-    // const reportColumns = cuurent.tableColumns.map(column =>
-    //   typeof column === 'string'
-    //     ? ''
-    //     : column.columns.map((c, i) => ({ [i]: '' }))
-    // );
-    // setReport({ ...report, columns: [reportColumns] });
-    if (currentReportType.machineType === 'מכונה') {
-      setReport({
-        ...report,
-        machine: { model: '', year: '', manufacturer: '', serialNumber: '' },
-      });
-    } else {
-      setReport({
-        ...report,
-        machine: '',
-      });
+  useEffect(() => {
+    if (!oldReport) {
+      if (currentReportType?.machineType === 'מכונה') {
+        setReport({
+          ...report,
+          machine: { model: '', year: '', manufacturer: '', serialNumber: '' },
+        });
+      } else {
+        setReport(prev => ({
+          ...prev,
+          machine: '',
+        }));
+      }
     }
-  };
+  }, [currentReportType]);
 
   const selectType = e => {
     setCurrentReportType(
       reportTypes.filter(type => type._id === e.target.value)[0]
     );
-    clearOldData();
+    setIsTypeChanged(true);
     setReport({ ...report, review: e.target.value });
   };
 
@@ -183,13 +179,17 @@ const ReportStepOne = ({
           </Flex>
         </>
       ) : currentReportType?.machineType === 'אביזר הרמה' ? (
-        <Input
-          placeholder="מס' סידורי"
-          value={report.machine}
-          name="serialNumber"
-          onChange={e => setReport({ ...report, machine: e.target.value })}
-        />
-      ): null}
+        <>
+          <Text>כלי:</Text>
+          <Input
+            placeholder="מס' סידורי"
+            value={report.machine}
+            name="serialNumber"
+            mb="12px"
+            onChange={e => setReport({ ...report, machine: e.target.value })}
+          />
+        </>
+      ) : null}
       <Flex gap="8px" mb="24px">
         <Input
           placeholder="תיאור הכלי"
