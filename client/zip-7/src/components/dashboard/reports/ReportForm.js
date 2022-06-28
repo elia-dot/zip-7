@@ -25,6 +25,8 @@ const ReportForm = ({ isOpen, onClose, modalType, oldReport }) => {
   const dispatch = useDispatch();
   const [step, setStep] = useState(1);
   const [showCompanyForm, setShowCompanyForm] = useState(false);
+  const [isTypeChanged, setIsTypeChanged] = useState(false);
+
   const [showMachinesTable, setShowMachinesTable] = useState(false);
   const [currentReportType, setCurrentReportType] = useState(null);
   const { loading, reportTypes } = useSelector(state => state.reports);
@@ -51,24 +53,47 @@ const ReportForm = ({ isOpen, onClose, modalType, oldReport }) => {
 
   useEffect(() => {
     if (!oldReport && report.review !== '') {
-      setCurrentReportType(
-        reportTypes.filter(type => type._id === report.review)[0]
+      const cuurent = reportTypes.filter(type => type._id === report.review)[0];
+      const reportColumns = cuurent.tableColumns.map(column =>
+        typeof column === 'string'
+          ? ''
+          : column.columns.map((c, i) => ({ [i]: '' }))
       );
-      const reportColumns = currentReportType?.tableColumns.map(column =>
+      setReport({ ...report, columns: [reportColumns] });
+    } else if (oldReport && report.review !== '') {
+      const cuurent = reportTypes.filter(
+        type => type._id === report.review._id
+      )[0];
+      const reportColumns = cuurent.tableColumns.map(column =>
         typeof column === 'string'
           ? ''
           : column.columns.map((c, i) => ({ [i]: '' }))
       );
       setReport({ ...report, columns: [reportColumns] });
     }
-  }, [report.review, currentReportType]);
+  }, [report.review]);
+
+  console.log(report);
+  // useEffect(() => {
+  //   if (isTypeChanged) {
+  //     const reportColumns = currentReportType?.tableColumns.map(column =>
+  //       typeof column === 'string'
+  //         ? ''
+  //         : column.columns.map((c, i) => ({ [i]: '' }))
+  //     );
+  //     setReport({ ...report, columns: [reportColumns] });
+  //     setIsTypeChanged(false);
+  //   }
+  // }, [isTypeChanged, currentReportType]);
 
   useEffect(() => {
     if (oldReport) {
       setReport(oldReport);
-      setCurrentReportType(report.review);
+      setCurrentReportType(
+        reportTypes.filter(type => type._id === oldReport.review._id)[0]
+      );
     }
-  }, [report]);
+  }, []);
 
   const closeCompanyForm = () => {
     setShowCompanyForm(false);
@@ -168,6 +193,7 @@ const ReportForm = ({ isOpen, onClose, modalType, oldReport }) => {
               setShowMachinesTable={setShowMachinesTable}
               setShowCompanyForm={setShowCompanyForm}
               setCurrentReportType={setCurrentReportType}
+              setIsTypeChanged={setIsTypeChanged}
             />
           )}
           {step === 2 && (

@@ -24,12 +24,14 @@ const Report = ({ report }) => {
   const closeReportForm = () => setReportModalType('');
   return (
     <AccordionItem>
-      <ReportForm
-        isOpen={repoerModalType !== ''}
-        onClose={closeReportForm}
-        modalType={repoerModalType}
-        oldReport={report}
-      />
+      {repoerModalType !== '' && (
+        <ReportForm
+          isOpen={true}
+          onClose={closeReportForm}
+          modalType={repoerModalType}
+          oldReport={report}
+        />
+      )}
       <AccordionButton _expanded={{ bg: 'gray.100' }}>
         <Flex py="16px" w="100%">
           <Box flex={3}>

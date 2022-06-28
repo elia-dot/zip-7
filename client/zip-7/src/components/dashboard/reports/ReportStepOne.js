@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Flex, Text, Input, Button } from '@chakra-ui/react';
+import {
+  Box,
+  Flex,
+  Text,
+  Input,
+  Button,
+  Select as SelectComponent,
+} from '@chakra-ui/react';
 import Moment from 'react-moment';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -16,6 +23,7 @@ const ReportStepOne = ({
   report,
   setReport,
   setCurrentReportType,
+  setIsTypeChanged,
   currentReportType,
   inputChange,
   removeInput,
@@ -24,14 +32,13 @@ const ReportStepOne = ({
   setShowCompanyForm,
 }) => {
   const [showTypeForm, setShowTypeForm] = useState(false);
-  const [isTypeChanged, setIsTypeChanged] = useState(false);
   const [currentCompany, setCurrentCompany] = useState(null);
   const [startDate, setStartDate] = useState('');
   const { companies } = useSelector(state => state.companies);
   const { reportTypes } = useSelector(state => state.reports);
 
   const reportTypesOptions = reportTypes.map(type => ({
-    value: type._id,
+    value: type,
     label: type.type,
   }));
 
@@ -59,19 +66,34 @@ const ReportStepOne = ({
     }
   }, [report.company]);
 
-  useEffect(() => {
-    if(isTypeChanged) {
-      setCurrentReportType(
-        reportTypes.filter(type => type._id === report.review)[0]
-      );
-      const reportColumns = currentReportType?.tableColumns.map(column =>
-        typeof column === 'string'
-          ? ''
-          : column.columns.map((c, i) => ({ [i]: '' }))
-      );
-      setReport({ ...report, columns: [reportColumns] });
+  const clearOldData = () => {
+    // const cuurent = reportTypes.filter(type => type._id === report.review)[0];
+    // const reportColumns = cuurent.tableColumns.map(column =>
+    //   typeof column === 'string'
+    //     ? ''
+    //     : column.columns.map((c, i) => ({ [i]: '' }))
+    // );
+    // setReport({ ...report, columns: [reportColumns] });
+    if (currentReportType.machineType === 'מכונה') {
+      setReport({
+        ...report,
+        machine: { model: '', year: '', manufacturer: '', serialNumber: '' },
+      });
+    } else {
+      setReport({
+        ...report,
+        machine: '',
+      });
     }
-  }, [isTypeChanged])
+  };
+
+  const selectType = e => {
+    setCurrentReportType(
+      reportTypes.filter(type => type._id === e.target.value)[0]
+    );
+    clearOldData();
+    setReport({ ...report, review: e.target.value });
+  };
 
   return (
     <>
@@ -79,19 +101,17 @@ const ReportStepOne = ({
         <Text>סוג תסקיר:</Text>
         <Flex gap="8px" mb="12px" alignItems="center">
           <Box flex={1}>
-            <Select
-              options={reportTypesOptions}
-              onChange={({ value }) => {
-                setReport({
-                  ...report,
-                  review: value,
-                });
-                setIsTypeChanged(true);
-              }}
-              placeholder={
-                currentReportType ? currentReportType.type : 'בחר סוג תסקיר'
-              }
-            />
+            <SelectComponent
+              value={currentReportType ? currentReportType._id : ''}
+              onChange={selectType}
+              placeholder="בחר סוג תסקיר"
+            >
+              {reportTypesOptions.map(type => (
+                <option key={type.value._id} value={type.value._id}>
+                  {type.label}
+                </option>
+              ))}
+            </SelectComponent>
           </Box>
           <Button onClick={() => setShowTypeForm(true)}>הוסף סוג תסקיר</Button>
         </Flex>
@@ -162,7 +182,14 @@ const ReportStepOne = ({
             />
           </Flex>
         </>
-      ) : null}
+      ) : currentReportType?.machineType === 'אביזר הרמה' ? (
+        <Input
+          placeholder="מס' סידורי"
+          value={report.machine}
+          name="serialNumber"
+          onChange={e => setReport({ ...report, machine: e.target.value })}
+        />
+      ): null}
       <Flex gap="8px" mb="24px">
         <Input
           placeholder="תיאור הכלי"
