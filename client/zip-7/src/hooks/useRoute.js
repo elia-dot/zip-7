@@ -5,11 +5,10 @@ export const useRoute = () => {
   const [route, setRoute] = useState('');
 
   useEffect(() => {
-    setRoute(
-      history.location.pathname.split('/')[
-        history.location.pathname.split('/').length - 1
-      ]
-    );
+    if (history.location.pathname.includes('reports')) setRoute('reports');
+    if (history.location.pathname.includes('clients')) setRoute('clients');
+    if (history.location.pathname.includes('logs')) setRoute('logs');
+    if (history.location.pathname.includes('reminders')) setRoute('reminders');
   }, [history.location.pathname]);
   return route;
 };

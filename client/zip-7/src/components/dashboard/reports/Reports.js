@@ -1,5 +1,12 @@
 import React, { useEffect } from 'react';
-import { Box, Text, Show, Flex, Accordion, Grid, Spinner } from '@chakra-ui/react';
+import {
+  Box,
+  Text,
+  Show,
+  Flex,
+  Grid,
+  Spinner,
+} from '@chakra-ui/react';
 import { useSelector, useDispatch } from 'react-redux';
 import {
   getReports,
@@ -61,11 +68,10 @@ const Reports = () => {
         }
         <Box flex={1}></Box>
       </Flex>
-      <Accordion allowToggle>
-        {reports.map(report => (
-          <Report key={report._id} report={report} />
-        ))}
-      </Accordion>
+
+      {reports.map(report => (
+        <Report key={report._id} report={report} />
+      ))}
     </Flex>
   );
 };

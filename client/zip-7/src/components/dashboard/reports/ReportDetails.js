@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import {
   Flex,
@@ -10,17 +10,27 @@ import {
   Button,
 } from '@chakra-ui/react';
 import Moment from 'react-moment';
+import { useSelector } from 'react-redux';
 
 import ReportTable from './ReportTable';
 import ReportForm from './ReportForm';
 import { useRoute } from '../../../hooks/useRoute';
 
-const ReportDetails = ({ report }) => {
+const ReportDetails = ({ match }) => {
+  const [report, setReport] = useState(null);
   const [repoerModalType, setReportModalType] = useState('');
   const closeReportForm = () => setReportModalType('');
   const route = useRoute();
+  const { reports } = useSelector(state => state.reports);
+
+  useEffect(() => {
+    const id = match.params.id;
+    const report = reports.find(e => e._id === id);
+    setReport(report);
+  }, [match.params.id]);
+  if (!report) return null;
   return (
-    <>
+    <Box padding="1em 2em">
       {repoerModalType !== '' && (
         <ReportForm
           isOpen={true}
@@ -107,11 +117,13 @@ const ReportDetails = ({ report }) => {
           </Flex>
         </Flex>
       </Flex>
-      <Divider/>
-      <Text fontWeight="bold" mt= "24px">פרטי התסקיר:</Text>
+      <Divider />
+      <Text fontWeight="bold" mt="24px">
+        פרטי התסקיר:
+      </Text>
       <ReportTable report={report} />
       <Divider />
-      <Flex wrap="wrap" gap="36px" mt = "24px">
+      <Flex wrap="wrap" gap="36px" mt="24px">
         <Box>
           <Text fontWeight="bold">הערות:</Text>
           {report.notes[0] === '' ? (
@@ -165,7 +177,7 @@ const ReportDetails = ({ report }) => {
           שכפל תסקיר
         </Button>
       </Flex>
-    </>
+    </Box>
   );
 };
 

@@ -2,7 +2,7 @@ import { Box, Divider } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import ReportDetails from '../reports/ReportDetails';
+import Report from '../reports/Report';
 
 const CompanyReportsTab = ({ company }) => {
   const [companyReport, setCompanyReport] = useState([]);
@@ -17,7 +17,7 @@ const CompanyReportsTab = ({ company }) => {
     <Box>
       {companyReport.map(report => (
         <>
-          <ReportDetails key={report._id} report={report} />
+          <Report key={report._id} report={report} />
           {companyReport.length > 1 && <Divider />}
         </>
       ))}

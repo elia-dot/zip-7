@@ -9,7 +9,7 @@ import { FiActivity, FiLogOut } from 'react-icons/fi';
 import { NavLink } from 'react-router-dom';
 import { Link } from '@chakra-ui/react';
 
-const SideNav = ({setShow}) => {
+const SideNav = ({ setShow }) => {
   const { user } = useSelector(state => state.auth);
 
   return (
@@ -32,7 +32,9 @@ const SideNav = ({setShow}) => {
         py="18px"
         cursor="pointer"
         transition="all 0.2s"
-        onClick={() => {setShow(false)}}
+        onClick={() => {
+          setShow(false);
+        }}
       >
         <Flex alignItems="center" gap="12px" justifyContent="center">
           <Icon as={HiOutlineDocumentReport} color="white" w={8} h={8} />
@@ -50,7 +52,9 @@ const SideNav = ({setShow}) => {
           py="18px"
           cursor="pointer"
           transition="all 0.2s"
-          onClick={() => {setShow(false)}}
+          onClick={() => {
+            setShow(false);
+          }}
         >
           <Flex alignItems="center" gap="12px" justifyContent="center">
             <Icon as={FaUsers} color="white" w={8} h={8} />
@@ -68,12 +72,14 @@ const SideNav = ({setShow}) => {
         py="18px"
         cursor="pointer"
         transition="all 0.2s"
-        onClick={() => {setShow(false)}}
+        onClick={() => {
+          setShow(false);
+        }}
       >
         <Flex alignItems="center" gap="12px" justifyContent="center">
           <Icon as={MdNotificationsActive} color="white" w={8} h={8} />
           <Text color="white" fontSize="18px">
-            תזכורות
+            התראות
           </Text>
         </Flex>
       </Link>
@@ -86,7 +92,9 @@ const SideNav = ({setShow}) => {
           py="18px"
           cursor="pointer"
           transition="all 0.2s"
-          onClick={() => {setShow(false)}}
+          onClick={() => {
+            setShow(false);
+          }}
         >
           <Flex alignItems="center" gap="12px" justifyContent="center">
             <Icon as={FiActivity} color="white" w={8} h={8} />
@@ -107,7 +115,7 @@ const SideNav = ({setShow}) => {
             px="22px"
             borderRadius="10px"
             shadow={`0px 0px 10px rgba(0, 0, 0, 0.5)`}
-            _hover= {{shadow: `0px 0px 10px rgba(0, 0, 0, 1)`}}
+            _hover={{ shadow: `0px 0px 10px rgba(0, 0, 0, 1)` }}
           >
             <Icon as={FiLogOut} color="white" w={8} h={8} />
             <Text color="white" fontSize="18px">

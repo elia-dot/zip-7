@@ -12,11 +12,13 @@ import Logs from './logs/Logs';
 import { useRoute } from '../../hooks/useRoute';
 import CompaniesControls from './companies/CompaniesControls';
 import ReportsControls from './reports/ReportsControls';
+import ReportDetails from './reports/ReportDetails';
+import CompanyDetails from './companies/CompanyDetails';
 
 const Dashboard = () => {
   const [show, setShow] = React.useState(false);
   const route = useRoute();
-  
+
   return (
     <Flex padding="16px" boxSizing="border-box" minHeight="100vh" bg="gray.200">
       <Box height="95vh">
@@ -28,8 +30,8 @@ const Dashboard = () => {
       <Box flex={1}>
         <Flex height="90px">
           <Box flex={1} height="100%">
-          {route=== 'clients' && <CompaniesControls/>}
-          {route=== 'reports' && <ReportsControls/>}
+            {route === 'clients' && <CompaniesControls />}
+            {route === 'reports' && <ReportsControls />}
           </Box>
           <Show below="md">
             <Flex p="15px">
@@ -75,24 +77,36 @@ const Dashboard = () => {
           boxShadow="2px 2px 10px 1px rgba(0,0,0,0.2)"
           position="relative"
           overflowY="auto"
-          className='scrollbar'
+          className="scrollbar"
         >
           <Switch>
             <Route
+              exact
               path="/dashboard/reports"
               render={props => <Reports {...props} />}
             />
             <Route
+              exact
               path="/dashboard/clients"
               render={props => <Companies {...props} />}
             />
             <Route
+              exact
               path="/dashboard/reminders"
               render={props => <Notifications {...props} />}
             />
             <Route
+              exact
               path="/dashboard/logs"
               render={props => <Logs {...props} />}
+            />
+            <Route
+              path="/dashboard/reports/:id"
+              render={props => <ReportDetails {...props} />}
+            />
+             <Route
+              path="/dashboard/clients/:id"
+              render={props => <CompanyDetails {...props} />}
             />
           </Switch>
         </Box>
