@@ -19,6 +19,7 @@ export const addReport = async (req, res) => {
       machineLicenseNumber,
       machine,
       columns,
+      nextReport,
     } = req.body;
 
     let machineId;
@@ -34,7 +35,7 @@ export const addReport = async (req, res) => {
       machineId = machine;
     }
 
-    const report = await Report.create({
+    let report = await Report.create({
       company,
       notes,
       location,
@@ -48,7 +49,15 @@ export const addReport = async (req, res) => {
       machine: machineId,
       columns,
       reviewer: req.user._id,
+      nextReport,
     });
+
+    report = await Report.findById(report._id)
+      .populate({
+        path: 'company',
+        populate: { path: 'primaryContact' },
+      })
+      .populate('review reviewer');
 
     return res.status(200).json({
       success: true,
@@ -69,15 +78,19 @@ export const getReports = async (req, res) => {
     const id = req.user._id;
     const user = await User.findById(id);
     if (user.role === 'master') {
-      reports = await Report.find().populate({
-        path: 'company',
-        populate: { path: 'primaryContact' },
-      }).populate('review reviewer');
+      reports = await Report.find()
+        .populate({
+          path: 'company',
+          populate: { path: 'primaryContact' },
+        })
+        .populate('review reviewer');
     } else {
-      reports = await Report.find({ contact: user._id }).populate({
-        path: 'company',
-        populate: { path: 'primaryContact' },
-      }).populate('review reviewer');
+      reports = await Report.find({ contact: user._id })
+        .populate({
+          path: 'company',
+          populate: { path: 'primaryContact' },
+        })
+        .populate('review reviewer');
     }
 
     return res.status(200).json({

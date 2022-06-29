@@ -22,7 +22,7 @@ const ReportDetails = ({ match }) => {
   const closeReportForm = () => setReportModalType('');
   const route = useRoute();
   const { reports } = useSelector(state => state.reports);
-
+  const { user } = useSelector(state => state.auth);
   useEffect(() => {
     const id = match.params.id;
     const report = reports.find(e => e._id === id);
@@ -161,22 +161,24 @@ const ReportDetails = ({ match }) => {
           )}
         </Box>
       </Flex>
-      <Flex wrap="wrap" gap="36px" mt="24px">
-        <Button
-          bg="blue.600"
-          color="white"
-          onClick={() => setReportModalType('edit')}
-        >
-          ערוך תסקיר
-        </Button>
-        <Button
-          bg="blue.600"
-          color="white"
-          onClick={() => setReportModalType('duplicate')}
-        >
-          שכפל תסקיר
-        </Button>
-      </Flex>
+      {user.role === 'master' && (
+        <Flex wrap="wrap" gap="36px" mt="24px">
+          <Button
+            bg="blue.600"
+            color="white"
+            onClick={() => setReportModalType('edit')}
+          >
+            ערוך תסקיר
+          </Button>
+          <Button
+            bg="blue.600"
+            color="white"
+            onClick={() => setReportModalType('duplicate')}
+          >
+            שכפל תסקיר
+          </Button>
+        </Flex>
+      )}
     </Box>
   );
 };

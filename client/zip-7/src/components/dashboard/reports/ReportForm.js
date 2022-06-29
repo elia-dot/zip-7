@@ -26,7 +26,7 @@ const ReportForm = ({ isOpen, onClose, modalType, oldReport }) => {
   const [step, setStep] = useState(1);
   const [showCompanyForm, setShowCompanyForm] = useState(false);
   const [isTypeChanged, setIsTypeChanged] = useState(false);
-
+  const [startDate, setStartDate] = useState('');
   const [showMachinesTable, setShowMachinesTable] = useState(false);
   const [currentReportType, setCurrentReportType] = useState(null);
   const { loading, reportTypes } = useSelector(state => state.reports);
@@ -147,6 +147,10 @@ const ReportForm = ({ isOpen, onClose, modalType, oldReport }) => {
   };
 
   const submit = () => {
+    report.date = new Date();
+    if (startDate !== '') {
+      report.nextReport = startDate;
+    }
     dispatch(addReport(report));
     setReport({
       review: '',
@@ -199,6 +203,8 @@ const ReportForm = ({ isOpen, onClose, modalType, oldReport }) => {
               setCurrentReportType={setCurrentReportType}
               setIsTypeChanged={setIsTypeChanged}
               oldReport={oldReport}
+              startDate={startDate}
+              setStartDate={setStartDate}
             />
           )}
           {step === 2 && (

@@ -31,10 +31,12 @@ const ReportStepOne = ({
   setShowMachinesTable,
   setShowCompanyForm,
   oldReport,
+  startDate,
+  setStartDate,
 }) => {
   const [showTypeForm, setShowTypeForm] = useState(false);
   const [currentCompany, setCurrentCompany] = useState(null);
-  const [startDate, setStartDate] = useState('');
+
   const { companies } = useSelector(state => state.companies);
   const { reportTypes } = useSelector(state => state.reports);
 
