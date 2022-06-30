@@ -9,6 +9,7 @@ import userRouter from './routers/userRouter.js';
 import companyRouter from './routers/companyRouter.js';
 import reviewRouter from './routers/reviewRouter.js';
 import reportRouter from './routers/reportRouter.js';
+import logRouter from './routers/logRouter.js';
 
 dotenv.config();
 
@@ -33,6 +34,7 @@ app.use('/api/users', userRouter);
 app.use('/api/companies', companyRouter);
 app.use('/api/reviews', reviewRouter);
 app.use('/api/reports', reportRouter);
+app.use('/api/logs', logRouter);
 
 const port = process.env.PORT || 5000;
 

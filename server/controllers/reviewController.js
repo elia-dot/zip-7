@@ -1,11 +1,11 @@
 import Review from '../models/Review.js';
+import { createLog } from './logController.js';
 
 export const addReview = async (req, res) => {
   try {
-    console.log(req.body);
     const newReviewType = await Review.create(req.body);
-   
-    res.status(200).json({
+    createLog('create report type', req.user._id, newReviewType._id);
+    return res.status(200).json({
       success: true,
       review: newReviewType,
     });
@@ -71,7 +71,7 @@ export const editReview = async (req, res) => {
     if (type !== undefined) review.type = type;
     if (saftyOrdinance !== undefined) review.saftyOrdinance = saftyOrdinance;
     await review.save();
-
+    createLog('update report type', req.user._id, review._id);
     res.status(200).json({
       success: true,
       message: 'Review updated successfully',

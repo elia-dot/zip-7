@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 import User from '../models/User.js';
 import Company from '../models/Company.js';
 import { generateRandomStr } from '../utils/generateRandomStr.js';
+import { createLog } from './logController.js';
 
 export const createUser = async (req, res) => {
   const {
@@ -63,7 +64,8 @@ export const createUser = async (req, res) => {
     'contacts primaryContact'
   );
   user.password = undefined;
-  res.status(201).json({
+  createLog('create user', req.user._id, user._id);
+  return res.status(201).json({
     success: true,
     user,
     company,
@@ -71,7 +73,7 @@ export const createUser = async (req, res) => {
 };
 export const getUsers = async (req, res) => {
   const users = await User.find();
-  res.status(200).json({
+  return res.status(200).json({
     success: true,
     users,
   });
@@ -142,6 +144,7 @@ export const updateUser = async (req, res) => {
   }
 
   await user.save();
+  createLog('update user', req.user._id, user._id);
   company = await Company.findById(companyId).populate(
     'contacts primaryContact'
   );
@@ -163,37 +166,32 @@ export const deleteUser = async (req, res) => {
   }
 
   let company = await Company.findById(user.company);
-  if (!company) {
-    return res.status(400).json({
-      success: false,
-      message: 'Company not found',
-    });
-  }
 
-  if (company.contacts.length === 1) {
-    return res.status(400).json({
-      success: false,
-      message: 'Company must have at least one contact',
-    });
-  }
+  if (company) {
+    if (company.contacts.length === 1) {
+      return res.status(400).json({
+        success: false,
+        message: 'Company must have at least one contact',
+      });
+    }
 
-  company.contacts = company.contacts.filter(
-    (contact) => contact.toString() !== user._id.toString()
-  );
+    company.contacts = company.contacts.filter(
+      (contact) => contact.toString() !== user._id.toString()
+    );
 
-  if (company.primaryContact.toString() === user._id.toString()) {
-    let users = await User.find({ company: company._id });
-    users = users.filter((user) => user._id.toString() !== req.params.id);
-    company.primaryContact = users[0]._id;
+    if (company.primaryContact.toString() === user._id.toString()) {
+      let users = await User.find({ company: company._id });
+      users = users.filter((user) => user._id.toString() !== req.params.id);
+      company.primaryContact = users[0]._id;
+      await company.save();
+    }
     await company.save();
+    await user.remove();
+    company = await Company.findById(company._id).populate(
+      'contacts primaryContact'
+    );
   }
-  await company.save();
-  await user.remove();
-  company = await Company.findById(company._id).populate(
-    'contacts primaryContact'
-  );
 
-  //TODO: delete releted documents
   res.status(200).json({
     success: true,
     message: 'User deleted',

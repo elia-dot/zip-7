@@ -2,6 +2,8 @@ import Report from '../models/Report.js';
 import Company from '../models/Company.js';
 import User from '../models/User.js';
 import Machine from '../models/Machine.js';
+import { createLog } from './logController.js';
+
 
 export const addReport = async (req, res) => {
   try {
@@ -58,6 +60,8 @@ export const addReport = async (req, res) => {
         populate: { path: 'primaryContact' },
       })
       .populate('review reviewer');
+
+    createLog('create report', req.user._id, report._id);
 
     return res.status(200).json({
       success: true,
@@ -204,6 +208,8 @@ export const editReport = async (req, res) => {
       report.machine.manufacturer = machine.manufacturer;
 
     await report.save();
+
+    createLog('edit report', req.user._id, report._id);
     return res.status(200).json({
       success: true,
       message: 'Report updated',

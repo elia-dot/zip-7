@@ -6,6 +6,7 @@ import Company from '../models/Company.js';
 import User from '../models/User.js';
 import { generateAuthToken, verifyToken } from '../utils/jwt.js';
 import { generateRandomStr } from '../utils/generateRandomStr.js';
+import { createLog } from './logController.js';
 
 export const signup = async (req, res) => {
   const { firstName, lastName, email, phone, password, companyDetails } =
@@ -47,6 +48,7 @@ export const signup = async (req, res) => {
   res.cookie('jwt', token, {
     httpOnly: true,
   });
+  createLog('signup', newUser._id);
   res.status(201).json({
     sucssess: true,
     token,
@@ -123,17 +125,20 @@ export const login = async (req, res) => {
       message: 'Incorrect password',
     });
   }
-  if(user.blocked){
+  if (user.blocked) {
     return res.status(403).json({
       success: false,
       message: 'Your account has been blocked.',
-    })
+    });
   }
   const token = await generateAuthToken(user);
   res.cookie('jwt', token, {
     httpOnly: true,
   });
   user.password = undefined;
+
+  createLog('login', user._id);
+
   res.status(200).json({
     success: true,
     token,
@@ -153,7 +158,7 @@ export const getAuthUser = async (req, res) => {
     success: true,
     user,
   });
-}
+};
 
 export const validateEmail = async (req, res) => {
   const id = req.user._id;
@@ -181,130 +186,128 @@ export const validateEmail = async (req, res) => {
 };
 
 export const forgotPassword = async (req, res) => {
-    const { email } = req.body;
-    if (!email) {
-        return res.status(400).json({
-            success: false,
-            message: 'Please provide an email address',
-        });
-    }
-    const user = await User.findOne({ email });
-    if (!user) {
-        return res.status(400).json({
-            success: false,
-            message: 'User not found',
-        });
-    }
-    const token = generateRandomStr(8);
-    console.log(token);
-    user.resetToken = token;
-    user.resetTokenExpiry = Date.now() + 3600000;
-    await user.save();
-    //TODO: send email with link to reset password
-    res.status(200).json({
-        success: true,
-        message: 'Email sent',
+  const { email } = req.body;
+  if (!email) {
+    return res.status(400).json({
+      success: false,
+      message: 'Please provide an email address',
     });
-}
+  }
+  const user = await User.findOne({ email });
+  if (!user) {
+    return res.status(400).json({
+      success: false,
+      message: 'User not found',
+    });
+  }
+  const token = generateRandomStr(8);
+  console.log(token);
+  user.resetToken = token;
+  user.resetTokenExpiry = Date.now() + 3600000;
+  await user.save();
+  //TODO: send email with link to reset password
+  res.status(200).json({
+    success: true,
+    message: 'Email sent',
+  });
+};
 
 export const validatePasswordToken = async (req, res) => {
-    const { resetToken } = req.body;
-    if (!resetToken) {
-        return res.status(400).json({
-            success: false,
-            message: 'Please provide a reset token',
-        });
-    }
-    const user = await User.findOne({ resetToken }).select('+resetTokenExpiry');
-    if (!user) {
-        return res.status(400).json({
-            success: false,
-            message: 'User not found',
-        });
-    }
-    if (user.resetTokenExpiry < Date.now()) {
-        return res.status(400).json({
-            success: false,
-            message: 'Reset token expired',
-        });
-    }
-    res.status(200).json({
-        success: true,
-        message: 'Reset token valid',
+  const { resetToken } = req.body;
+  if (!resetToken) {
+    return res.status(400).json({
+      success: false,
+      message: 'Please provide a reset token',
     });
-}
+  }
+  const user = await User.findOne({ resetToken }).select('+resetTokenExpiry');
+  if (!user) {
+    return res.status(400).json({
+      success: false,
+      message: 'User not found',
+    });
+  }
+  if (user.resetTokenExpiry < Date.now()) {
+    return res.status(400).json({
+      success: false,
+      message: 'Reset token expired',
+    });
+  }
+  res.status(200).json({
+    success: true,
+    message: 'Reset token valid',
+  });
+};
 
 //create password for the first time or after forgot password
 export const createPassword = async (req, res) => {
-    const { resetToken, email } = req.body;
-    let user
-    if (resetToken ) {
-        user = await User.findOne({ resetToken }).select('+resetTokenExpiry');
-    }
-    if (email) {
-        user = await User.findOne({ email }).select('+resetTokenExpiry');
-    } 
-    if (!user) {
-        return res.status(400).json({
-            success: false,
-            message: 'User not found',
-        });
-    }
-    
-    if (user.resetTokenExpiry < Date.now()) {  
-        return res.status(400).json({
-            success: false,
-            message: 'Reset token expired',
-        });
-    }
-    const { password } = req.body;
-    if (!password) {
-        return res.status(400).json({
-            success: false,
-            message: 'Please provide a password',
-        });
-    }
-    user.password = await bcrypt.hash(password, 12);
-    user.resetToken = null;
-    user.resetTokenExpiry = null;
-    await user.save();
-    res.status(200).json({
-        success: true,
-        message: 'Password updated successfully',
+  const { resetToken, email } = req.body;
+  let user;
+  if (resetToken) {
+    user = await User.findOne({ resetToken }).select('+resetTokenExpiry');
+  }
+  if (email) {
+    user = await User.findOne({ email }).select('+resetTokenExpiry');
+  }
+  if (!user) {
+    return res.status(400).json({
+      success: false,
+      message: 'User not found',
     });
-}
+  }
+
+  if (user.resetTokenExpiry < Date.now()) {
+    return res.status(400).json({
+      success: false,
+      message: 'Reset token expired',
+    });
+  }
+  const { password } = req.body;
+  if (!password) {
+    return res.status(400).json({
+      success: false,
+      message: 'Please provide a password',
+    });
+  }
+  user.password = await bcrypt.hash(password, 12);
+  user.resetToken = null;
+  user.resetTokenExpiry = null;
+  await user.save();
+  res.status(200).json({
+    success: true,
+    message: 'Password updated successfully',
+  });
+};
 
 //update password normally
 
 export const updatePassword = async (req, res) => {
-    const { oldPassword, password } = req.body;
-    if (!password | !oldPassword) {
-        return res.status(400).json({
-            success: false,
-            message: 'Please provide a password',
-        });
-    }
-    const user = await User.findById(req.user._id).select('+password');
-    if (!user) {
-        return res.status(400).json({
-            success: false,
-            message: 'User not found',
-        });
-    }
-    const isMatch = await bcrypt.compare(oldPassword, user.password);
-    if (!isMatch) {
-        return res.status(400).json({
-            success: false,
-            message: 'Incorrect password',
-        });
-    }
-    const newPassword = await bcrypt.hash(req.body.password, 10);
-    user.password = newPassword;
-    await user.save();
-    res.status(200).json({
-        success: true,
-        message: 'Password updated successfully',
+  const { oldPassword, password } = req.body;
+  if (!password | !oldPassword) {
+    return res.status(400).json({
+      success: false,
+      message: 'Please provide a password',
     });
-}
-
-
+  }
+  const user = await User.findById(req.user._id).select('+password');
+  if (!user) {
+    return res.status(400).json({
+      success: false,
+      message: 'User not found',
+    });
+  }
+  const isMatch = await bcrypt.compare(oldPassword, user.password);
+  if (!isMatch) {
+    return res.status(400).json({
+      success: false,
+      message: 'Incorrect password',
+    });
+  }
+  const newPassword = await bcrypt.hash(req.body.password, 10);
+  user.password = newPassword;
+  await user.save();
+  res.status(200).json({
+    success: true,
+    message: 'Password updated successfully',
+  });
+};

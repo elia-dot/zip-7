@@ -1,5 +1,7 @@
 import Company from '../models/Company.js';
+import Report from '../models/Report.js';
 import User from '../models/User.js';
+import { createLog } from './logController.js';
 
 export const getCompanies = async (req, res) => {
   try {
@@ -76,6 +78,7 @@ export const createCompany = async (req, res) => {
     newCompany = await Company.findById(newCompany._id).populate(
       'contacts primaryContact'
     );
+    createLog('create company', req.user._id, newCompany._id);
     res.status(201).json({
       success: true,
       company: newCompany,
@@ -118,12 +121,13 @@ export const updateCompany = async (req, res) => {
     company = await Company.findById(companyId).populate(
       'contacts primaryContact'
     );
-    res.status(200).json({
+    createLog('update company', req.user._id, companyId);
+    return res.status(200).json({
       success: true,
       company,
     });
   } catch (error) {
-    res.status(500).json({ success: false, message: error });
+    return res.status(500).json({ success: false, message: error });
   }
 };
 export const deleteCompany = async (req, res) => {
@@ -139,7 +143,18 @@ export const deleteCompany = async (req, res) => {
     companyContacts.forEach(async (contactId) => {
       await User.findByIdAndDelete(contactId);
     });
-    //TODO: delete company related documents
+
+    const reports = await Report.find({ company: company._id });
+    reports.forEach(async (report) => {
+      await Report.findByIdAndDelete(report._id);
+    });
+
+    const contacts = await User.find({ company: company._id });
+    contacts.forEach(async (contact) => {
+      await User.findByIdAndDelete(contact._id);
+    });
+
+    createLog('delete company', req.user._id, company._id);
     res.json({ success: true, message: 'Company deleted' });
   } catch (error) {
     res.status(500).json({ success: false, message: error });

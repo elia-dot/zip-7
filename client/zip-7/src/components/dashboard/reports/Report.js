@@ -28,7 +28,7 @@ const Report = ({ report }) => {
         <Box flex={3}>
           <Text textAlign="center">
             {' '}
-            <Moment data={report.date} format="DD/MM/YYYY" />
+            <Moment date={report.date} format="DD/MM/YYYY" />
           </Text>
         </Box>
 
