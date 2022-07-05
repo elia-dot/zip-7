@@ -11,6 +11,7 @@ import {
 } from '@chakra-ui/react';
 import Moment from 'react-moment';
 import { useSelector } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 
 import ReportTable from './ReportTable';
 import ReportForm from './ReportForm';
@@ -21,6 +22,7 @@ const ReportDetails = ({ match }) => {
   const [repoerModalType, setReportModalType] = useState('');
   const closeReportForm = () => setReportModalType('');
   const route = useRoute();
+  const history = useHistory();
   const { reports } = useSelector(state => state.reports);
   const { user } = useSelector(state => state.auth);
   useEffect(() => {
@@ -161,24 +163,34 @@ const ReportDetails = ({ match }) => {
           )}
         </Box>
       </Flex>
-      {user.role === 'master' && (
-        <Flex wrap="wrap" gap="36px" mt="24px">
-          <Button
-            bg="blue.600"
-            color="white"
-            onClick={() => setReportModalType('edit')}
-          >
-            ערוך תסקיר
-          </Button>
-          <Button
-            bg="blue.600"
-            color="white"
-            onClick={() => setReportModalType('duplicate')}
-          >
-            שכפל תסקיר
-          </Button>
-        </Flex>
-      )}
+
+      <Flex wrap="wrap" gap="36px" mt="24px">
+        <Button
+          bg="blue.600"
+          color="white"
+          onClick={() => history.push(`/reports/pdf`)}
+        >
+          יצא PDF
+        </Button>
+        {user.role === 'master' && (
+          <>
+            <Button
+              bg="blue.600"
+              color="white"
+              onClick={() => setReportModalType('edit')}
+            >
+              ערוך תסקיר
+            </Button>
+            <Button
+              bg="blue.600"
+              color="white"
+              onClick={() => setReportModalType('duplicate')}
+            >
+              שכפל תסקיר
+            </Button>
+          </>
+        )}
+      </Flex>
     </Box>
   );
 };
