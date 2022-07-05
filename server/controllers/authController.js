@@ -32,6 +32,7 @@ export const signup = async (req, res) => {
     lastName,
     phone,
     email,
+    role: 'user',
     verificationToken,
     password: hashedPassword,
   });
@@ -43,6 +44,7 @@ export const signup = async (req, res) => {
   }
   newUser.company = company._id;
   company.contacts.push(newUser._id);
+  company.primaryContact = newUser._id;
   await company.save();
   await newUser.save();
   res.cookie('jwt', token, {

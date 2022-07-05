@@ -9,6 +9,7 @@ export const useRoute = () => {
     if (history.location.pathname.includes('clients')) setRoute('clients');
     if (history.location.pathname.includes('logs')) setRoute('logs');
     if (history.location.pathname.includes('reminders')) setRoute('reminders');
+    if (history.location.pathname.includes('users')) setRoute('users');
   }, [history.location.pathname]);
   return route;
 };

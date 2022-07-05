@@ -14,6 +14,7 @@ const Company = ({ company }) => {
       Math.min(...company.reports.map(e => new Date(e.nextReport)))
     );
   };
+  console.log(company);
   return (
     <>
       <Flex padding="16px" w="100%">

@@ -1,18 +1,12 @@
 import {
-  LOGIN,
-  LOGIN_ERROR,
-  SIGNUP,
-  SIGNUP_ERROR,
-  START_AUTH_LOADING,
-  STOP_AUTH_LOADING,
-  LOAD_USER,
-  LOAD_USER_FAILED,
-  LOGOUT,
+  GET_NOTIFICATIONS,
+  READ_NOTIFICATION,
+  START_NOTIFICATIONS_LOADING,
+  STOP_NOTIFICATIONS_LOADING,
 } from '../actions/types';
 
 const initialState = {
-  isAuth: false,
-  user: null,
+  messages: [],
   loading: false,
   error: null,
 };
@@ -20,36 +14,27 @@ const initialState = {
 export default function (state = initialState, action) {
   const { type, payload } = action;
   switch (type) {
-    case LOGIN:
-    case SIGNUP:
-    case LOAD_USER:
+    case GET_NOTIFICATIONS:
       return {
         ...state,
-        isAuth: true,
+        messages: payload,
         loading: false,
-        user: payload,
         error: null,
       };
-    case LOGIN_ERROR:
-    case SIGNUP_ERROR:
-    case LOAD_USER_FAILED:
+    case READ_NOTIFICATION:
       return {
         ...state,
+        messages: state.messages.map(message =>
+          message._id === payload ? { ...message, isRead: true } : message
+        ),
         loading: false,
-        error: payload,
       };
-    case LOGOUT:
-      return {
-        ...state,
-        isAuth: false,
-        user: null,
-      };
-    case START_AUTH_LOADING:
+    case START_NOTIFICATIONS_LOADING:
       return {
         ...state,
         loading: true,
       };
-    case STOP_AUTH_LOADING:
+    case STOP_NOTIFICATIONS_LOADING:
       return {
         ...state,
         loading: false,

@@ -154,7 +154,6 @@ export const deleteCompany = async (req, res) => {
       await User.findByIdAndDelete(contact._id);
     });
 
-    createLog('delete company', req.user._id, company._id);
     res.json({ success: true, message: 'Company deleted' });
   } catch (error) {
     res.status(500).json({ success: false, message: error });

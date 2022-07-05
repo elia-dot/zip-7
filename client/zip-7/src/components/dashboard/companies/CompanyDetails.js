@@ -9,7 +9,6 @@ import CompanyReportsTab from './CompanyReportsTab';
 const CompanyDetails = ({ match }) => {
   const [company, setCompany] = useState(null);
   const { companies } = useSelector(state => state.companies);
-  console.log(companies);
   useEffect(() => {
     const company = companies.find(c => c._id === match.params.id);
     setCompany(company);

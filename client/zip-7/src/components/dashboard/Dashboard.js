@@ -14,6 +14,8 @@ import CompaniesControls from './companies/CompaniesControls';
 import ReportsControls from './reports/ReportsControls';
 import ReportDetails from './reports/ReportDetails';
 import CompanyDetails from './companies/CompanyDetails';
+import Users from '../users/Users';
+import UserDetails from '../users/UserDetails';
 
 const Dashboard = () => {
   const [show, setShow] = React.useState(false);
@@ -101,12 +103,21 @@ const Dashboard = () => {
               render={props => <Logs {...props} />}
             />
             <Route
+              exact
+              path="/dashboard/users"
+              render={props => <Users {...props} />}
+            />
+            <Route
               path="/dashboard/reports/:id"
               render={props => <ReportDetails {...props} />}
             />
-             <Route
+            <Route
               path="/dashboard/clients/:id"
               render={props => <CompanyDetails {...props} />}
+            />
+            <Route
+              path="/dashboard/users/:id"
+              render={props => <UserDetails {...props} />}
             />
           </Switch>
         </Box>

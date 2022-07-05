@@ -8,6 +8,7 @@ import {
   STOP_AUTH_LOADING,
   LOAD_USER,
   LOAD_USER_FAILED,
+  LOGOUT,
 } from './types';
 
 const saveToken = token => {
@@ -49,7 +50,6 @@ export const login = data => async dispatch => {
     const res = await axios.post(
       `${process.env.REACT_APP_API}/auth/login`,
       data,
-      
       { withCredentials: true,  credentials: 'include' }
     );
     saveToken(res.data.token);
@@ -91,3 +91,8 @@ export const signup = data => async dispatch => {
     });
   }
 };
+
+export const logout = () => dispatch => {
+  localStorage.removeItem('token');
+  dispatch({ type: LOGOUT });
+}

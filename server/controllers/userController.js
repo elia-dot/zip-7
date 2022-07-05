@@ -101,6 +101,7 @@ export const getUser = async (req, res) => {
   });
 };
 export const updateUser = async (req, res) => {
+  console.log(req.body);
   const user = await User.findById(req.params.id);
   if (!user) {
     return res.status(400).json({
@@ -118,12 +119,20 @@ export const updateUser = async (req, res) => {
     });
   }
 
-  const { firstName, lastName, phone, role, isMasterContact, companyId } =
-    req.body;
+  const {
+    firstName,
+    lastName,
+    phone,
+    email,
+    role,
+    isMasterContact,
+    companyId,
+  } = req.body;
   let company = await Company.findById(companyId);
 
   if (firstName !== undefined) user.firstName = firstName;
   if (lastName !== undefined) user.lastName = lastName;
+  if (email !== undefined) user.email = email;
   if (phone !== undefined) user.phone = phone;
   if (role !== undefined)
     user.role = req.user.role === 'master' ? role : user.role;
@@ -209,9 +218,14 @@ export const toggleBlock = async (req, res) => {
   }
   user.blocked = !user.blocked;
   await user.save();
+  createLog(
+    user.blocked ? 'block user' : 'unblock user',
+    req.user._id,
+    user._id
+  );
   res.status(200).json({
     success: true,
-    message: user.blocked ? 'User blocked' : 'User unblocked',
+    user,
   });
 };
 

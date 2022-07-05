@@ -12,15 +12,15 @@ const Notifications = () => {
       <Tabs>
         <TabList>
           <Tab>תסקירים קרובים</Tab>
-          <Tab>הודעות</Tab>
+          {/* <Tab>הודעות</Tab> */}
         </TabList>
         <TabPanels>
           <TabPanel>
             <NextRportsTab />
           </TabPanel>
-          <TabPanel>
+          {/* <TabPanel>
             <MessagesTab />
-          </TabPanel>
+          </TabPanel> */}
         </TabPanels>
       </Tabs>
     </Box>

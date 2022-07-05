@@ -209,7 +209,7 @@ export const editReport = async (req, res) => {
 
     await report.save();
 
-    createLog('edit report', req.user._id, report._id);
+    createLog('update report', req.user._id, report._id);
     return res.status(200).json({
       success: true,
       message: 'Report updated',

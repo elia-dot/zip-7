@@ -1,7 +1,11 @@
 import mongoose from 'mongoose';
 
 const logSchema = new mongoose.Schema({
-  actionOnType: String,
+  docModel: {
+    type: String,
+    required: true,
+    enum: ['User', 'Company', 'Report', 'Review'],
+  },
   action: {
     type: String,
     required: true,
@@ -12,8 +16,22 @@ const logSchema = new mongoose.Schema({
     required: true,
   },
   actionOn: {
-    type: mongoose.Schema.Types.ObjectId,
-    refPath: 'actionOnType',
+    company: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Company',
+    },
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+    },
+    report: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Report',
+    },
+    review: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Review',
+    },
   },
   createdAt: {
     type: Date,
@@ -23,7 +41,10 @@ const logSchema = new mongoose.Schema({
 
 logSchema.pre('find', function (next) {
   this.populate('creator');
-  this.populate('actionOn');
+  this.populate('actionOn.company');
+  this.populate('actionOn.user');
+  this.populate('actionOn.report');
+  this.populate('actionOn.review');
   next();
 });
 

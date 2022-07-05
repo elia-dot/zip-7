@@ -1,5 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Divider, Flex, Icon, Link, Select, Show } from '@chakra-ui/react';
+import {
+  Box,
+  Divider,
+  Flex,
+  Icon,
+  Link,
+  Select,
+  Show,
+  Text,
+} from '@chakra-ui/react';
 import { useSelector } from 'react-redux';
 import Moment from 'react-moment';
 import { Link as RouterLink } from 'react-router-dom';
@@ -65,60 +74,67 @@ const NextRportsTab = () => {
           <option value="year">מהשנה הקרובה</option>
         </Select>
       </Flex>
-      <Flex textAlign="center" padding="0.5em 1em">
-        <Box flex={1}>חברה</Box>
-        <Show above="md">
-          <Box flex={2}>תסקיר</Box>
-        </Show>
-        <Box flex={1}>תאריך</Box>
-        <Box flex={1}></Box>
-      </Flex>
-      <Box
-        boxShadow="0px 0px 5px rgba(0, 0, 0, 0.1)"
-        padding="0.5em 1em"
-        borderRadius="5px"
-      >
-        {sortedReports.map((e, i) => (
-          <>
-            <Flex key={i} textAlign="center" py="12px">
-              <Link
-                as={RouterLink}
-                to={`/dashboard/clients/${e.company._id}`}
-                flex={1}
-                color="blue.600"
-              >
-                {e.company.name}
-              </Link>
-              <Show above="md">
-                <Box flex={2}>{e.review.type}</Box>
-              </Show>
-              <Box flex={1}>
-                <Moment date={e.nextReport} format="DD/MM/YYYY" />
-              </Box>
-              <Show above="md">
-                <Link
-                  as={RouterLink}
-                  to={`/dashboard/reports/${e._id}`}
-                  flex={1}
-                  color="blue.600"
-                >
-                  ראה תסקיר אחרון
-                </Link>
-              </Show>
-              <Show below="md">
-                <Link
-                  as={RouterLink}
-                  to={`/dashboard/reports/${e._id}`}
-                  flex={1}
-                >
-                  <Icon as={FiArrowLeftCircle} />
-                </Link>
-              </Show>
-            </Flex>
-            {i !== sortedReports.length - 1 && <Divider />}
-          </>
-        ))}
-      </Box>
+      {sortedReports.length === 0 && (
+        <Text py="1em">אין תסקירים בתאריכים אלה</Text>
+      )}
+      {sortedReports.length > 0 && (
+        <>
+          <Flex textAlign="center" padding="0.5em 1em">
+            <Box flex={1}>חברה</Box>
+            <Show above="md">
+              <Box flex={2}>תסקיר</Box>
+            </Show>
+            <Box flex={1}>תאריך</Box>
+            <Box flex={1}></Box>
+          </Flex>
+          <Box
+            boxShadow="0px 0px 5px rgba(0, 0, 0, 0.1)"
+            padding="0.5em 1em"
+            borderRadius="5px"
+          >
+            {sortedReports.map((e, i) => (
+              <>
+                <Flex key={i} textAlign="center" py="12px">
+                  <Link
+                    as={RouterLink}
+                    to={`/dashboard/clients/${e.company._id}`}
+                    flex={1}
+                    color="blue.600"
+                  >
+                    {e.company.name}
+                  </Link>
+                  <Show above="md">
+                    <Box flex={2}>{e.review.type}</Box>
+                  </Show>
+                  <Box flex={1}>
+                    <Moment date={e.nextReport} format="DD/MM/YYYY" />
+                  </Box>
+                  <Show above="md">
+                    <Link
+                      as={RouterLink}
+                      to={`/dashboard/reports/${e._id}`}
+                      flex={1}
+                      color="blue.600"
+                    >
+                      ראה תסקיר אחרון
+                    </Link>
+                  </Show>
+                  <Show below="md">
+                    <Link
+                      as={RouterLink}
+                      to={`/dashboard/reports/${e._id}`}
+                      flex={1}
+                    >
+                      <Icon as={FiArrowLeftCircle} />
+                    </Link>
+                  </Show>
+                </Flex>
+                {i !== sortedReports.length - 1 && <Divider />}
+              </>
+            ))}
+          </Box>
+        </>
+      )}
     </>
   );
 };
