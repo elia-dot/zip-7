@@ -17,7 +17,6 @@ import PickMachine from './PickMachine';
 import { useDispatch, useSelector } from 'react-redux';
 
 import { addReport } from '../../../redux/actions/reports';
-
 import ReportStepOne from './ReportStepOne';
 import ReportStepTwo from './ReportStepTwo';
 
@@ -98,7 +97,6 @@ const ReportForm = ({ isOpen, onClose, modalType, oldReport }) => {
     }
   }, [isTypeChanged, currentReportType]);
 
-  console.log(report.columns);
   const closeCompanyForm = () => {
     setShowCompanyForm(false);
   };
