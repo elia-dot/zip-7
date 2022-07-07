@@ -15,6 +15,7 @@ import Dashboard from './components/dashboard/Dashboard';
 import Signup from './components/auth/Signup';
 import { loadUser } from './redux/actions/auth';
 import ProtectedRoute from './components/ProtectedRoute';
+import ReoprtPDF from './components/dashboard/reports/ReoprtPDF';
 
 function App() {
   const dispatch = useDispatch();
@@ -49,6 +50,7 @@ function App() {
             </Route>
             <Route path="/login" component={Login} />
             <Route path="/signup" component={Signup} />
+            <Route path="/reports/pdf" component={ReoprtPDF} />
           </Switch>
         </Router>
       </RTLProvider>
