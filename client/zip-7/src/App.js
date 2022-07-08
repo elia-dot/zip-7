@@ -50,7 +50,7 @@ function App() {
             </Route>
             <Route path="/login" component={Login} />
             <Route path="/signup" component={Signup} />
-            <Route path="/reports/pdf" component={ReoprtPDF} />
+            <Route path="/report/pdf/:id" component={ReoprtPDF} />
           </Switch>
         </Router>
       </RTLProvider>
