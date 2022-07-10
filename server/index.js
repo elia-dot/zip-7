@@ -11,6 +11,7 @@ import reviewRouter from './routers/reviewRouter.js';
 import reportRouter from './routers/reportRouter.js';
 import logRouter from './routers/logRouter.js';
 import messageRouter from './routers/messageRouter.js';
+import icountRouter from './routers/icountRouter.js';
 
 dotenv.config();
 
@@ -37,6 +38,7 @@ app.use('/api/reviews', reviewRouter);
 app.use('/api/reports', reportRouter);
 app.use('/api/logs', logRouter);
 app.use('/api/messages', messageRouter);
+app.use('/api/icount', icountRouter);
 
 const port = process.env.PORT || 5000;
 

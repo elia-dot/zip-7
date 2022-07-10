@@ -5,6 +5,7 @@ import reports from './reports';
 import logs from './logs';
 import users from './users';
 import notifications from './notifications';
+import icount from './icount';
 
 export default combineReducers({
   auth,
@@ -13,4 +14,5 @@ export default combineReducers({
   logs,
   users,
   notifications,
+  icount
 });

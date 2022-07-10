@@ -14,8 +14,35 @@ import Moment from 'react-moment';
 
 import { getReports } from '../../../redux/actions/reports';
 
+const Row = ({ children, ...props }) => (
+  <View
+    {...props}
+    style={{
+      display: 'flex',
+      flexDirection: 'row',
+      borderBottom: '1px solid black',
+    }}
+  >
+    {children}
+  </View>
+);
+
+const Cell = ({ children, ...props }) => (
+  <View
+    style={{
+      flex: props.flex,
+      borderRight: '1px solid black',
+      padding: 5,
+      textAlign: 'center',
+    }}
+  >
+    {children}
+  </View>
+);
+
 const ReoprtPDF = ({ match }) => {
   const [report, setReport] = useState(null);
+  const [columns, setColumns] = useState([]);
   const { reports } = useSelector(state => state.reports);
   const dispatch = useDispatch();
 
@@ -35,7 +62,14 @@ const ReoprtPDF = ({ match }) => {
 
     setReport(report);
   }, [reports]);
+
+  useLayoutEffect(() => {
+    if (report) {
+      setColumns(report.review.tableColumns.reverse());
+    }
+  }, [report]);
   if (!report) return null;
+  console.log(columns);
   return (
     <PDFViewer style={styles.page}>
       <Document>
@@ -92,50 +126,210 @@ const ReoprtPDF = ({ match }) => {
             </View>
           </View>
           <View style={{ ...styles.borderdBox, marginTop: 40 }}>
-            <View
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                borderBottom: '1px solid black',
-                paddingVertical: 5,
-              }}
-            >
-              <View style={{ flex: 1 }}>
-                <Text style={{ ...styles.smallText, ...styles.font }}>
+            <Row>
+              <Cell flex={1}>
+                <Text style={{ ...styles.boldText, ...styles.font }}>
                   <Moment date={report.date} format="DD/MM/YYYY" />
                 </Text>
-              </View>
-              <View style={{ flex: 1 }}>
+              </Cell>
+              <Cell flex={1}>
                 {' '}
                 <Text style={{ ...styles.smallText, ...styles.font }}>
                   תאריך הבדיקה
                 </Text>
-              </View>
-              <View style={{ flex: 1 }}>
+              </Cell>
+              <Cell flex={1}>
                 {' '}
-                <Text style={{ ...styles.smallText, ...styles.font }}>
+                <Text style={{ ...styles.boldText, ...styles.font }}>
                   {report.location}
                 </Text>
-              </View>
-              <View style={{ flex: 1 }}>
+              </Cell>
+              <Cell flex={1}>
                 {' '}
                 <Text style={{ ...styles.smallText, ...styles.font }}>
                   מיקום בדיקה
                 </Text>
-              </View>
-              <View style={{ flex: 1 }}>
+              </Cell>
+              <Cell flex={1}>
                 {' '}
-                <Text style={{ ...styles.smallText, ...styles.font }}>
+                <Text style={{ ...styles.boldText, ...styles.font }}>
                   {report.reportType}{' '}
                 </Text>
-              </View>
-              <View style={{ flex: 1 }}>
+              </Cell>
+              <Cell flex={1}>
                 {' '}
                 <Text style={{ ...styles.smallText, ...styles.font }}>
                   סוג בדיקה
                 </Text>
-              </View>
-            </View>
+              </Cell>
+            </Row>
+            <Row>
+              <Cell flex={1}>
+                <Text style={{ ...styles.boldText, ...styles.font }}>
+                  <Moment date={report.nextReport} format="DD/MM/YYYY" />
+                </Text>
+              </Cell>
+              <Cell flex={1}>
+                {' '}
+                <Text style={{ ...styles.smallText, ...styles.font }}>
+                  מועד בדיקה הבאה
+                </Text>
+              </Cell>
+              <Cell flex={3}>
+                <Text style={{ ...styles.boldText, ...styles.font }}>-</Text>
+              </Cell>
+              <Cell flex={1}>
+                {' '}
+                <Text style={{ ...styles.smallText, ...styles.font }}>
+                  תסקיר קודם
+                </Text>
+              </Cell>
+            </Row>
+            <Row>
+              <Cell flex={1}>
+                {' '}
+                <Text style={{ ...styles.boldText, ...styles.font }}>
+                  {`${report.company.primaryContact.firstName} ${report.company.primaryContact.lastName}`}
+                </Text>
+              </Cell>
+              <Cell flex={1}>
+                {' '}
+                <Text style={{ ...styles.smallText, ...styles.font }}>
+                  איש קשר
+                </Text>
+              </Cell>
+              <Cell flex={3}>
+                {' '}
+                <Text style={{ ...styles.boldText, ...styles.font }}>
+                  {report.company.name}{' '}
+                </Text>
+              </Cell>
+              <Cell flex={1}>
+                {' '}
+                <Text style={{ ...styles.smallText, ...styles.font }}>
+                  התופש
+                </Text>
+              </Cell>
+            </Row>
+            <Row>
+              <Cell flex={1}>
+                {' '}
+                <Text style={{ ...styles.boldText, ...styles.font }}>
+                  {report.company.phone}
+                </Text>
+              </Cell>
+              <Cell flex={1}>
+                {' '}
+                <Text style={{ ...styles.smallText, ...styles.font }}>
+                  טלפון{' '}
+                </Text>
+              </Cell>
+              <Cell flex={3}>
+                {' '}
+                <Text style={{ ...styles.boldText, ...styles.font }}>
+                  {report.company.city}{' '}
+                </Text>
+              </Cell>
+              <Cell flex={1}>
+                {' '}
+                <Text style={{ ...styles.smallText, ...styles.font }}>מען</Text>
+              </Cell>
+            </Row>
+            <Row>
+              <Cell flex={1}>
+                {' '}
+                <Text style={{ ...styles.boldText, ...styles.font }}>
+                  {report.company.fax}
+                </Text>
+              </Cell>
+              <Cell flex={1}>
+                {' '}
+                <Text style={{ ...styles.smallText, ...styles.font }}>
+                  פקס{' '}
+                </Text>
+              </Cell>
+              <Cell flex={3}>
+                {' '}
+                <Text style={{ ...styles.boldText, ...styles.font }}>
+                  {report.company.email}{' '}
+                </Text>
+              </Cell>
+              <Cell flex={1}>
+                {' '}
+                <Text style={{ ...styles.smallText, ...styles.font }}>
+                  מייל
+                </Text>
+              </Cell>
+            </Row>
+            {report.review.machineType === 'מכונה' && (
+              <Row>
+                <Cell flex={1}>
+                  <Text style={{ ...styles.boldText, ...styles.font }}>
+                    {report.machineLicenseNumber}{' '}
+                  </Text>
+                </Cell>
+                <Cell flex={1}>
+                  {' '}
+                  <Text style={{ ...styles.smallText, ...styles.font }}>
+                    מס' רישוי
+                  </Text>
+                </Cell>
+                <Cell flex={3}>
+                  <Text style={{ ...styles.boldText, ...styles.font }}>
+                    {report.machineDescription}{' '}
+                  </Text>
+                </Cell>
+                <Cell flex={2}>
+                  {' '}
+                  <Text style={{ ...styles.smallText, ...styles.font }}>
+                    תאור מכונת ההרמה
+                  </Text>
+                </Cell>
+              </Row>
+            )}
+            {report.review.machineType === 'אביזר הרמה' && (
+              <Row>
+                <Cell flex={5}>
+                  <Text style={{ ...styles.boldText, ...styles.font }}>
+                    {report.machineDescription}{' '}
+                  </Text>
+                </Cell>
+                <Cell flex={2}>
+                  {' '}
+                  <Text style={{ ...styles.smallText, ...styles.font }}>
+                    תאור אביזר ההרמה{' '}
+                  </Text>
+                </Cell>
+              </Row>
+            )}
+            <Row>
+              {columns.map((column, index) => {
+                typeof column === 'string' ? (
+                  <Cell flex={1}>
+                    <Text style={{ ...styles.boldText, ...styles.font }}>
+                      {column}{' '}
+                    </Text>
+                  </Cell>
+                ) : (
+                  <>
+                    <Cell flex={1}>
+                      <Text style={{ ...styles.boldText, ...styles.font }}>
+                        {column.columnTitle}{' '}
+                      </Text>
+                    </Cell>
+                    <Row>
+                      {column.columns.map((c, i) => (
+                        <Cell flex={1}>
+                          <Text style={{ ...styles.boldText, ...styles.font }}>
+                            {c[i]}{' '}
+                          </Text>
+                        </Cell>
+                      ))}
+                    </Row>
+                  </>
+                );
+              })}
+            </Row>
           </View>
         </Page>
       </Document>
@@ -174,6 +368,10 @@ const styles = StyleSheet.create({
   },
   smallText: {
     fontSize: 10,
+  },
+  boldText: {
+    fontSize: 10,
+    fontWeight: 'bold',
   },
 });
 

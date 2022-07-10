@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Box, Button, Flex, Show, Icon } from '@chakra-ui/react';
 import { BiMenu } from 'react-icons/bi';
 import { IoMdClose } from 'react-icons/io';
 import { Switch, Route } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
 import SideNav from '../SideNav';
 import Reports from './reports/Reports';
@@ -16,10 +17,23 @@ import ReportDetails from './reports/ReportDetails';
 import CompanyDetails from './companies/CompanyDetails';
 import Users from '../users/Users';
 import UserDetails from '../users/UserDetails';
+import Invoices from './invoices/Invoices';
+import { icountLogin } from '../../redux/actions/icount';
 
 const Dashboard = () => {
   const [show, setShow] = React.useState(false);
   const route = useRoute();
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(
+      icountLogin({
+        cid: process.env.REACT_APP_ICOUNT_CID,
+        user: process.env.REACT_APP_ICOUNT_USER,
+        pass: process.env.REACT_APP_ICOUNT_PASS,
+      })
+    );
+  }, [dispatch]);
 
   return (
     <Flex padding="16px" boxSizing="border-box" minHeight="100vh" bg="gray.200">
@@ -106,6 +120,11 @@ const Dashboard = () => {
               exact
               path="/dashboard/users"
               render={props => <Users {...props} />}
+            />
+            <Route
+              exact
+              path="/dashboard/invoices"
+              render={props => <Invoices {...props} />}
             />
             <Route
               path="/dashboard/reports/:id"
