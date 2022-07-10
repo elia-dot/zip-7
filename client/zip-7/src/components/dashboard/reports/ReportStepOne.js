@@ -23,19 +23,19 @@ const ReportStepOne = ({
   report,
   setReport,
   setCurrentReportType,
-  setIsTypeChanged,
   currentReportType,
   inputChange,
   removeInput,
   addInput,
   setShowMachinesTable,
   setShowCompanyForm,
-  oldReport,
   startDate,
   setStartDate,
+  currentCompany,
+  setCurrentCompany,
 }) => {
   const [showTypeForm, setShowTypeForm] = useState(false);
-  const [currentCompany, setCurrentCompany] = useState(null);
+  const [selectedReportType, setSelectedReportType] = useState(null);
 
   const { companies } = useSelector(state => state.companies);
   const { reportTypes } = useSelector(state => state.reports);
@@ -69,9 +69,32 @@ const ReportStepOne = ({
     }
   }, [report.company]);
 
+  const selectType = e => {
+    setSelectedReportType(e.target.value);
+  };
+
   useEffect(() => {
-    if (!oldReport) {
-      if (currentReportType?.machineType === 'מכונה') {
+    setSelectedReportType(report.review?._id);
+  }, [report.review._id]);
+
+  useEffect(() => {
+    if (selectedReportType && selectedReportType !== report.review._id) {
+      const review = reportTypes.filter(
+        type => type._id === selectedReportType
+      )[0];
+
+      setReport({ ...report, review: selectedReportType });
+      setCurrentReportType(review);
+
+      const reportColumns = review.tableColumns.map(column =>
+        typeof column === 'string'
+          ? ''
+          : column.columns.map((c, i) => ({ [i]: '' }))
+      );
+
+      setReport(prev => ({ ...prev, columns: [reportColumns] }));
+
+      if (selectedReportType === 'מכונה') {
         setReport({
           ...report,
           machine: { model: '', year: '', manufacturer: '', serialNumber: '' },
@@ -83,15 +106,7 @@ const ReportStepOne = ({
         }));
       }
     }
-  }, [currentReportType]);
-
-  const selectType = e => {
-    setCurrentReportType(
-      reportTypes.filter(type => type._id === e.target.value)[0]
-    );
-    setIsTypeChanged(true);
-    setReport({ ...report, review: e.target.value });
-  };
+  }, [selectedReportType]);
 
   return (
     <>

@@ -8,6 +8,7 @@ import {
   START_REPORTS_LOADING,
   STOP_REPORTS_LOADING,
   ADD_REPORT,
+  EDIT_REPORT,
 } from './types';
 
 export const getReports = () => async dispatch => {
@@ -67,6 +68,7 @@ export const addReport = (data) => async dispatch => {
 }
 
 export const getMachines = () => async (dispatch) => {
+  dispatch({ type: START_REPORTS_LOADING });
   try {
     const res = await axios.get(`${process.env.REACT_APP_API}/reports/machines`, {
       withCredentials: true,
@@ -76,3 +78,17 @@ export const getMachines = () => async (dispatch) => {
     console.log(error);
   }
 }
+
+export const editReport = (data) => async (dispatch) => {
+  try {
+    const res = await axios.patch(`${process.env.REACT_APP_API}/reports/${data._id}`, data, {
+      withCredentials: true,
+    });
+    console.log(res.data.report);
+    dispatch({ type: EDIT_REPORT, payload: res.data.report });
+    dispatch({ type: STOP_REPORTS_LOADING });
+  } catch (error) {
+    console.log(error);
+    dispatch({ type: STOP_REPORTS_LOADING });
+  }
+} 

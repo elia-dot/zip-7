@@ -16,7 +16,7 @@ import AddCompany from '../companies/AddCompany';
 import PickMachine from './PickMachine';
 import { useDispatch, useSelector } from 'react-redux';
 
-import { addReport } from '../../../redux/actions/reports';
+import { addReport, editReport } from '../../../redux/actions/reports';
 import ReportStepOne from './ReportStepOne';
 import ReportStepTwo from './ReportStepTwo';
 
@@ -24,10 +24,10 @@ const ReportForm = ({ isOpen, onClose, modalType, oldReport }) => {
   const dispatch = useDispatch();
   const [step, setStep] = useState(1);
   const [showCompanyForm, setShowCompanyForm] = useState(false);
-  const [isTypeChanged, setIsTypeChanged] = useState(false);
   const [startDate, setStartDate] = useState('');
   const [showMachinesTable, setShowMachinesTable] = useState(false);
   const [currentReportType, setCurrentReportType] = useState(null);
+  const [currentCompany, setCurrentCompany] = useState(null);
   const { loading, reportTypes } = useSelector(state => state.reports);
 
   const [report, setReport] = useState({
@@ -52,8 +52,8 @@ const ReportForm = ({ isOpen, onClose, modalType, oldReport }) => {
 
   useEffect(() => {
     if (!oldReport && report.review !== '') {
-      const cuurent = reportTypes.filter(type => type._id === report.review)[0];
-      const reportColumns = cuurent.tableColumns.map(column =>
+      const current = reportTypes.filter(type => type._id === report.review)[0];
+      const reportColumns = current.tableColumns.map(column =>
         typeof column === 'string'
           ? ''
           : column.columns.map((c, i) => ({ [i]: '' }))
@@ -64,38 +64,13 @@ const ReportForm = ({ isOpen, onClose, modalType, oldReport }) => {
 
   useEffect(() => {
     if (oldReport) {
-      setReport(oldReport);
+      setReport({ ...oldReport, company: oldReport.company._id });
       setCurrentReportType(
         reportTypes.filter(type => type._id === oldReport.review._id)[0]
       );
+      setCurrentCompany(oldReport.company);
     }
   }, []);
-
-  useEffect(() => {
-    if (oldReport && isTypeChanged) {
-      console.log(currentReportType?.tableColumns);
-      const reportColumns = currentReportType?.tableColumns.map(column =>
-        typeof column === 'string'
-          ? ''
-          : column.columns.map((c, i) => ({ [i]: '' }))
-      );
-
-      setReport(prev => ({ ...prev, columns: [reportColumns] }));
-      console.log(report.columns);
-
-      if (currentReportType?.machineType === 'מכונה') {
-        setReport({
-          ...report,
-          machine: { model: '', year: '', manufacturer: '', serialNumber: '' },
-        });
-      } else {
-        setReport(prev => ({
-          ...prev,
-          machine: '',
-        }));
-      }
-    }
-  }, [isTypeChanged, currentReportType]);
 
   const closeCompanyForm = () => {
     setShowCompanyForm(false);
@@ -149,7 +124,15 @@ const ReportForm = ({ isOpen, onClose, modalType, oldReport }) => {
     if (startDate !== '') {
       report.nextReport = startDate;
     }
-    dispatch(addReport(report));
+
+    if (modalType === 'edit') {
+      dispatch(editReport(report));
+    } else {
+      if (report._id) {
+        report._id = undefined;
+      }
+      dispatch(addReport(report));
+    }
     setReport({
       review: '',
       company: '',
@@ -199,10 +182,11 @@ const ReportForm = ({ isOpen, onClose, modalType, oldReport }) => {
               setShowMachinesTable={setShowMachinesTable}
               setShowCompanyForm={setShowCompanyForm}
               setCurrentReportType={setCurrentReportType}
-              setIsTypeChanged={setIsTypeChanged}
               oldReport={oldReport}
               startDate={startDate}
               setStartDate={setStartDate}
+              currentCompany={currentCompany}
+              setCurrentCompany={setCurrentCompany}
             />
           )}
           {step === 2 && (
