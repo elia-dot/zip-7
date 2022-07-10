@@ -4,7 +4,6 @@ import User from '../models/User.js';
 import Machine from '../models/Machine.js';
 import { createLog } from './logController.js';
 
-
 export const addReport = async (req, res) => {
   try {
     const {
@@ -155,7 +154,7 @@ export const editReport = async (req, res) => {
       machineLicenseNumber,
       machine,
     } = req.body;
-    const report = await Report.findById(id);
+    let report = await Report.findById(id);
     if (!report) {
       return res.status(404).json({
         success: false,
@@ -209,10 +208,17 @@ export const editReport = async (req, res) => {
 
     await report.save();
 
+    report = await Report.findById(id)
+      .populate({
+        path: 'company',
+        populate: { path: 'primaryContact' },
+      })
+      .populate('review reviewer');
+
     createLog('update report', req.user._id, report._id);
     return res.status(200).json({
       success: true,
-      message: 'Report updated',
+      report,
     });
   } catch (error) {
     console.log(error);

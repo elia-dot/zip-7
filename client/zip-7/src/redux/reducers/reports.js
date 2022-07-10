@@ -6,6 +6,7 @@ import {
   GET_MACHINES,
   ADD_REPORT_TYPE,
   ADD_REPORT,
+  EDIT_REPORT,
 } from '../actions/types';
 
 const initialState = {
@@ -41,6 +42,17 @@ export default function (state = initialState, action) {
       return {
         ...state,
         reports: [...state.reports, payload],
+        loading: false,
+      };
+    case EDIT_REPORT:
+      return {
+        ...state,
+        reports: state.reports.map(report => {
+          if (report._id === payload._id) {
+            return payload;
+          }
+          return report;
+        }),
         loading: false,
       };
     case GET_MACHINES:
