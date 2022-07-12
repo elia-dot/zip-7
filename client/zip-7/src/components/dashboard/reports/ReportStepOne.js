@@ -167,39 +167,47 @@ const ReportStepOne = ({
             </Button>
           </Flex>
           <Flex gap="8px" mb="12px">
-            <Input
-              placeholder="דגם"
-              value={report.machine.model}
-              name="model"
-              onChange={changeMachine}
-            />
-            <Input
-              placeholder="מס' סידורי"
-              value={report.machine.serialNumber}
-              name="serialNumber"
-              onChange={changeMachine}
-            />
+            <Box flex={1}>
+              <Text>דגם:</Text>
+              <Input
+                value={report.machine.model}
+                name="model"
+                onChange={changeMachine}
+              />
+            </Box>
+            <Box flex={1}>
+              <Text>מס' סידורי:</Text>
+              <Input
+                value={report.machine.serialNumber}
+                name="serialNumber"
+                onChange={changeMachine}
+              />
+            </Box>
           </Flex>
           <Flex gap="8px" mb="12px">
-            <Input
-              placeholder="יצרן"
-              value={report.machine.manufacturer}
-              name="manufacturer"
-              onChange={changeMachine}
-            />
-            <Input
-              placeholder="שנת ייצור"
-              value={report.machine.year}
-              name="year"
-              onChange={changeMachine}
-            />
+            <Box flex={1}>
+              <Text>יצרן:</Text>
+              <Input
+                value={report.machine.manufacturer}
+                name="manufacturer"
+                onChange={changeMachine}
+              />
+            </Box>
+            <Box flex={1}>
+              <Text>שנת ייצור:</Text>
+              <Input
+                value={report.machine.year}
+                name="year"
+                onChange={changeMachine}
+              />
+            </Box>
           </Flex>
         </>
       ) : currentReportType?.machineType === 'אביזר הרמה' ? (
         <>
           <Text>כלי:</Text>
+          <Text>מס' סידורי:</Text>
           <Input
-            placeholder="מס' סידורי"
             value={report.machine}
             name="serialNumber"
             mb="12px"
@@ -208,52 +216,62 @@ const ReportStepOne = ({
         </>
       ) : null}
       <Flex gap="8px" mb="24px">
-        <Input
-          placeholder="תיאור הכלי"
-          name="machineDescription"
-          value={report.machineDescription}
-          onChange={handleReportChange}
-          required
-        />
-        <Input
-          placeholder="מס' רישוי"
-          name="machineLicenseNumber"
-          value={report.machineLicenseNumber}
-          onChange={handleReportChange}
-          required
-        />
+        <Box flex={1}>
+          <Text>תיאור הכלי:</Text>
+          <Input
+            name="machineDescription"
+            value={report.machineDescription}
+            onChange={handleReportChange}
+            required
+          />
+        </Box>
+        <Box flex={1}>
+          <Text>מס' רישוי:</Text>
+          <Input
+            name="machineLicenseNumber"
+            value={report.machineLicenseNumber}
+            onChange={handleReportChange}
+            required
+          />
+        </Box>
       </Flex>
       <Flex gap="8px" mb="12px">
-        <Input
-          placeholder="איזור"
-          name="location"
-          value={report.location}
-          onChange={handleReportChange}
-          required
-        />
-        <Input
-          placeholder="מס' תסקיר"
-          name="reportNumber"
-          value={report.reportNumber}
-          onChange={handleReportChange}
-          required
-        />
+        <Box flex={1}>
+          <Text>איזור הבדיקה:</Text>
+          <Input
+            name="location"
+            value={report.location}
+            onChange={handleReportChange}
+            required
+          />
+        </Box>
+        <Box flex={1}>
+          <Text>מס' תסקיר:</Text>
+          <Input
+            name="reportNumber"
+            value={report.reportNumber}
+            onChange={handleReportChange}
+            required
+          />
+        </Box>
       </Flex>
       <Flex gap="8px" mb="12px">
-        <Input
-          placeholder="סוג הבדיקה"
-          name="reportType"
-          value={report.reportType}
-          onChange={handleReportChange}
-          required
-          flex={2}
-        />
+        <Box flex={1}>
+          <Text>סוג הבדיקה:</Text>
+          <Input
+            name="reportType"
+            value={report.reportType}
+            onChange={handleReportChange}
+            required
+            flex={2}
+          />
+        </Box>
         <Box flex={3}>
+          <Text>תאריך בדיקה הבאה:</Text>
           <DatePicker
             selected={startDate}
             onChange={date => setStartDate(date)}
             className="date-picker"
-            placeholderText="תאריך בדיקה הבאה"
             dateFormat="dd/MM/yyyy"
             isClearable={startDate}
             clearButtonClassName="clear-date"

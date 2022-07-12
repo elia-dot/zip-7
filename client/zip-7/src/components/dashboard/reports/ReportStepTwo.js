@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import {
   Accordion,
   AccordionItem,
@@ -26,7 +26,6 @@ const ReportStepTwo = ({
   removeInput,
   addInput,
 }) => {
-  
   const changeReportColumn = (e, i, primaryIndex) => {
     const { target } = e;
     const newColumns = [...report.columns];
@@ -62,7 +61,7 @@ const ReportStepTwo = ({
     <>
       <Accordion allowToggle allowMultiple>
         {report.columns.map((_, primaryIndex) => (
-          <AccordionItem key={(primaryIndex +1) * 100}>
+          <AccordionItem key={(primaryIndex + 1) * 100}>
             <AccordionButton bg="gray.50">
               {report.columns.length > 1 && (
                 <Icon
@@ -78,30 +77,33 @@ const ReportStepTwo = ({
             <AccordionPanel>
               {currentReportType?.tableColumns.map((column, i) =>
                 typeof column === 'string' ? (
-                  <Input
-                    placeholder={column}
-                    mb="12px"
-                    value={report.columns[primaryIndex][i]}
-                    key={(i + 1) * 23}
-                    onChange={e => {
-                      changeReportColumn(e, i, primaryIndex);
-                    }}
-                  />
+                  <Fragment key={column}>
+                    <Text>{column}</Text>
+                    <Input
+                      mb="12px"
+                      value={report.columns[primaryIndex][i]}
+                      key={(i + 1) * 23}
+                      onChange={e => {
+                        changeReportColumn(e, i, primaryIndex);
+                      }}
+                    />
+                  </Fragment>
                 ) : (
                   <>
                     <Text mb="12px">{`${column.columnTitle}:`}</Text>
                     {column.columns.map((c, index) => (
-                      <Input
-                        placeholder={c[index]}
-                        key={(index + 1) * 10}
-                        mb="12px"
-                        value={
-                          report.columns[primaryIndex][i][index][`${index}`]
-                        }
-                        onChange={e =>
-                          changeReportSplitedColumn(e, i, index, primaryIndex)
-                        }
-                      />
+                      <Fragment key={c[index]}>
+                        <Text>{c[index]}</Text>
+                        <Input
+                          mb="12px"
+                          value={
+                            report.columns[primaryIndex][i][index][`${index}`]
+                          }
+                          onChange={e =>
+                            changeReportSplitedColumn(e, i, index, primaryIndex)
+                          }
+                        />
+                      </Fragment>
                     ))}
                   </>
                 )
