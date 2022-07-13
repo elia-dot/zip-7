@@ -10,7 +10,7 @@ const initialState = {
   error: null,
 };
 
-export default function (state = initialState, action) {
+export default function logs(state = initialState, action) {
   const { type, payload } = action;
   switch (type) {
     case GET_LOGS:

@@ -11,7 +11,7 @@ const initialState = {
   error: null,
 };
 
-export default function (state = initialState, action) {
+export default function notifications(state = initialState, action) {
   const { type, payload } = action;
   switch (type) {
     case GET_NOTIFICATIONS:

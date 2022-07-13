@@ -24,7 +24,7 @@ const ReportTable = ({ report }) => {
               })),
             }
       ),
-    []
+    [report.review.tableColumns]
   );
 
   const data = [];

@@ -68,7 +68,7 @@ const UserDetails = ({ match }) => {
   useEffect(() => {
     const user = users.find(u => u._id === match.params.id);
     setUser(user);
-  }, [users]);
+  }, [users, match.params.id]);
 
   useEffect(() => {
     if (user) {
@@ -254,7 +254,7 @@ const UserDetails = ({ match }) => {
         <Button bg="blue.600" color="white" onClick={onOpen}>
           ערוך משתמש
         </Button>
-        {user.role !== 'master' && (
+        {currentUser.role === 'master' && user.role !== 'master' && (
           <Button
             bg="red.600"
             color="white"

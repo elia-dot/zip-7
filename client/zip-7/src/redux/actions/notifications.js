@@ -47,7 +47,7 @@ export const getMessages = () => async dispatch => {
 
 export const readMessage = id => async dispatch => {
   try {
-    const res = await axios.patch(
+    await axios.patch(
       `${process.env.REACT_APP_API}/messages/${id}`,
       {},
       {

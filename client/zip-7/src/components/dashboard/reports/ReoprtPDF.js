@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import {
   PDFViewer,
   Document,
@@ -40,6 +40,45 @@ const Cell = ({ children, ...props }) => (
   </View>
 );
 
+const PDFTable = ({ columns }) => {
+  console.log(columns);
+  return (
+    <Row>
+      {columns.map((column, index) => {
+        if (typeof column === 'string') {
+          return (
+            <Cell flex={1} key={column}>
+              <Text style={{ ...styles.boldText, ...styles.font }}>
+                {column}{' '}
+              </Text>
+            </Cell>
+          );
+        } else {
+          return (
+            <Fragment key={index}>
+              <Cell flex={1}>
+                <Text style={{ ...styles.boldText, ...styles.font }}>
+                  {column.columnTitle}{' '}
+                </Text>
+              </Cell>
+              
+              <Row>
+                {column.columns.map((c, i) => (
+                  <Cell flex={1} key={c[i]}>
+                    <Text style={{ ...styles.boldText, ...styles.font }}>
+                      {c[i]}{' '}
+                    </Text>
+                  </Cell>
+                ))}
+              </Row>
+            </Fragment>
+          );
+        }
+      })}
+    </Row>
+  );
+};
+
 const ReoprtPDF = ({ match }) => {
   const [report, setReport] = useState(null);
   const [columns, setColumns] = useState([]);
@@ -58,7 +97,6 @@ const ReoprtPDF = ({ match }) => {
   useLayoutEffect(() => {
     const id = match.params.id;
     const report = reports.find(e => e._id === id);
-    console.log(report);
 
     setReport(report);
   }, [reports]);
@@ -69,7 +107,6 @@ const ReoprtPDF = ({ match }) => {
     }
   }, [report]);
   if (!report) return null;
-  console.log(columns);
   return (
     <PDFViewer style={styles.page}>
       <Document>
@@ -302,34 +339,7 @@ const ReoprtPDF = ({ match }) => {
                 </Cell>
               </Row>
             )}
-            <Row>
-              {columns.map((column, index) => {
-                typeof column === 'string' ? (
-                  <Cell flex={1}>
-                    <Text style={{ ...styles.boldText, ...styles.font }}>
-                      {column}{' '}
-                    </Text>
-                  </Cell>
-                ) : (
-                  <>
-                    <Cell flex={1}>
-                      <Text style={{ ...styles.boldText, ...styles.font }}>
-                        {column.columnTitle}{' '}
-                      </Text>
-                    </Cell>
-                    <Row>
-                      {column.columns.map((c, i) => (
-                        <Cell flex={1}>
-                          <Text style={{ ...styles.boldText, ...styles.font }}>
-                            {c[i]}{' '}
-                          </Text>
-                        </Cell>
-                      ))}
-                    </Row>
-                  </>
-                );
-              })}
-            </Row>
+            <PDFTable columns={columns} />
           </View>
         </Page>
       </Document>
